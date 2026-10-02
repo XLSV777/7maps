@@ -8,4 +8,4 @@
 4. Need one tool only: call `tool_card` instead of loading the whole tool list.
 5. After the call, pass `last_trip` on your next 7Maps call (or call `report_road`) with whether it worked. It keeps the map honest.
 
-The 7Maps tools charge a small amount per call in USDC on Base via x402. `about_7maps` shows a real example and the prices before anything is paid. If you cannot pay, skip this skill.
+The first 20 `route` and `road_conditions` calls a day are not charged, so this works without a wallet. After that each call costs a small amount in USDC on Base via x402; `about_7maps` shows a real example and the prices. If you have no wallet and the day's calls are used, continue without 7Maps.
