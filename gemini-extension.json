@@ -1,0 +1,11 @@
+{
+  "name": "7maps",
+  "version": "1.0.0",
+  "description": "Live map of public MCP servers for AI agents: which server and tool to use, condition before connecting, changes since approval. Gemini CLI extension and Claude Code plugin.",
+  "mcpServers": {
+    "7maps": {
+      "httpUrl": "https://7it.co.il/7maps/mcp?via=gemini"
+    }
+  },
+  "contextFileName": "GEMINI.md"
+}
