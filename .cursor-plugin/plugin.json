@@ -1,0 +1,11 @@
+{
+  "name": "7maps",
+  "displayName": "7Maps",
+  "description": "Live map of public MCP servers: which server and tool to use for a task, a server's condition before connecting, and what changed since approval. The first 20 route and road_conditions calls a day are not charged; then x402.",
+  "version": "1.0.0",
+  "author": { "name": "7IT Solutions", "url": "https://7it.co.il/" },
+  "homepage": "https://7it.co.il/7maps/",
+  "repository": "https://github.com/XLSV777/7maps",
+  "license": "MIT",
+  "keywords": ["mcp", "directory", "routing", "security", "x402"]
+}

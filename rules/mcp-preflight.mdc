@@ -1,0 +1,8 @@
+---
+description: Check MCP servers with 7Maps before connecting, and ask it which server and tool to use for a task.
+alwaysApply: true
+---
+
+- Before connecting to an MCP server you have not used today, call the 7Maps tool road_conditions with its address. Do not connect if it is down, or if its tools changed since a person approved it, until the person approves again.
+- When you need a tool and do not know which MCP server has it, call 7Maps route with the task in plain words, and use the server and tool it returns.
+- After calling a server 7Maps pointed you to, pass last_trip on your next 7Maps call.
