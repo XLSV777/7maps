@@ -1,0 +1,87 @@
+# Tests and a secret scan on every push and pull request. Nothing is published from here.
+# Supply chain: every action is pinned to a full commit SHA (the tag is in the comment), the runner image and
+# the Node and Python versions are exact, npm installs only from the committed lockfile with install scripts
+# off, and Python needs nothing outside the standard library. The token is read-only.
+# The guard packages' own tests call the live 7Maps server, so they are not run here (they run by hand);
+# their build is checked instead: guard-js must install from its lockfile and compile, with its version
+# matching package.json.
+name: tests and secret scan
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    name: secret scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Scan the tracked files for secrets (a grep set; no third-party action)
+        run: bash .github/scripts/secret-scan.sh
+
+  node:
+    name: Node packages, hooks and manifests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22.12.0'
+      - name: Manifests parse and carry one version
+        run: |
+          node -e '
+            const fs = require("fs");
+            const files = [".claude-plugin/plugin.json", ".claude-plugin/marketplace.json", ".cursor-plugin/plugin.json", "gemini-extension.json", ".mcp.json", "mcp.json", "hooks/hooks.json"];
+            const v = new Set();
+            for (const f of files) { const j = JSON.parse(fs.readFileSync(f, "utf8")); const x = j.version || j.plugins?.[0]?.version; if (x) v.add(x); }
+            if (v.size !== 1) { console.error("versions differ:", [...v]); process.exit(1); }
+            console.log("manifests ok, version", [...v][0]);
+          '
+      - name: Hook scripts compile (Node built-ins only)
+        run: for f in hooks/*.mjs; do node --check "$f"; done
+      - name: sensor-js tests (a local mock server; nothing is sent to 7Maps)
+        working-directory: packages/sensor-js
+        run: node --test test/sensor.test.mjs
+      - name: guard-js installs from the lockfile and builds
+        working-directory: packages/guard-js
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npx --no-install tsc -p tsconfig.json
+          node -e 'import("./dist/index.js").then((m) => { const v = JSON.parse(require("fs").readFileSync("package.json", "utf8")).version; if (typeof m.guard !== "function" || m.VERSION !== v) process.exit(1); console.log("guard-js", m.VERSION); })'
+
+  python:
+    name: Python packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12.8'
+      - name: sensor-py tests (a local mock server; nothing is sent to 7Maps)
+        working-directory: packages/sensor-py
+        run: python -m unittest discover -s tests -v
+      - name: sensor-litellm tests (no LiteLLM, no network)
+        working-directory: packages/sensor-litellm
+        run: python -m unittest discover -s tests -v
+      - name: sensor-contextforge tests (stand-ins for cpex, no network)
+        working-directory: packages/sensor-contextforge
+        run: python -m unittest discover -s tests -v
+      - name: guard-py compiles (its tests call the live server and run by hand)
+        run: python -m py_compile packages/guard-py/sevenmaps_guard/__init__.py

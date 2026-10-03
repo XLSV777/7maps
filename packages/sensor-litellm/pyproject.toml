@@ -11,7 +11,7 @@ requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{ name = "7IT", email = "lior@7it.co.il" }]
-dependencies = ["sevenmaps-sensor @ git+https://github.com/XLSV777/7maps@main#subdirectory=packages/sensor-py"]
+dependencies = ["sevenmaps-sensor @ git+https://github.com/XLSV777/7maps@7b0e5eab08eb7b3eb3d77971601f77177c7c1d24#subdirectory=packages/sensor-py"]
 
 [project.urls]
 Homepage = "https://7it.co.il/7maps/"

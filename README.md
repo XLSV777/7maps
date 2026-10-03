@@ -1,5 +1,7 @@
 # 7Maps
 
+Measured October 2026 on Opus 5.5: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/
+
 Docs: https://7it.co.il/7maps/plugin/
 
 A live map of public MCP servers for AI agents (a map of software, not geography). Every remote server in the official MCP registry is checked daily with `initialize` and `tools/list` only. Each tool gets an automated risk estimate (read-only, needs approval or high risk) from its public description and annotations; estimates can be wrong. Agents ask one question instead of loading thousands of tool definitions:

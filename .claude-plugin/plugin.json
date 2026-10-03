@@ -1,7 +1,7 @@
 {
   "name": "7maps",
-  "version": "1.4.0",
-  "description": "Map of public MCP servers for AI agents (software, not geography): find a tool for a job among over 200,000, check a server's status and estimated tool risk before connecting, and see what changed since a person approved it. Works with nothing to set up.",
+  "version": "1.4.1",
+  "description": "Map of public MCP servers for AI agents (software, not geography): find a tool for a job among over 200,000, check a server's status and estimated tool risk before connecting, and see what changed since a person approved it. Works with nothing to set up. Measured October 2026 on Opus 5.5: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/",
   "author": {
     "name": "7IT Solutions",
     "url": "https://7it.co.il/"
