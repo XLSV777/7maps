@@ -63,6 +63,17 @@ Paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
 
 Each README lists exactly what is sent.
 
+## Sensors for gateways
+
+If you run an MCP gateway, an opt-in sensor can send 7Maps the outcome of each tool call it forwards: server, worked or failed, failure reason, milliseconds, tool name, time. Never arguments, results, prompts, users or tokens. Outcomes from many gateways feed the ratings and live incident flags every agent sees. Off unless `SEVENMAPS_SENSOR=1`.
+
+- LiteLLM proxy (a `CustomLogger`): [`packages/sensor-litellm`](packages/sensor-litellm)
+- IBM ContextForge (a cpex plugin): [`packages/sensor-contextforge`](packages/sensor-contextforge)
+- MCP Python SDK client and any Python gateway: [`packages/sensor-py`](packages/sensor-py)
+- MCP TypeScript SDK client and any Node.js gateway: [`packages/sensor-js`](packages/sensor-js)
+
+Each README shows the exact payload, what is never sent, and how to switch it on and off.
+
 ## Own an MCP server?
 
 Put a new server on the map at https://7it.co.il/7maps/submit/ (observed for 7 days first; placement cannot be bought), or see how the crawler works and opt out at https://7it.co.il/7maps/bot/.

@@ -1,0 +1,28 @@
+{
+  "name": "7maps-sensor",
+  "version": "0.1.0",
+  "description": "Opt-in sensor for MCP gateways and clients: reports per-call outcomes (server, ok, fail reason, ms, tool name) to 7Maps. Never arguments or results.",
+  "license": "MIT",
+  "author": "7IT (https://7it.co.il/)",
+  "homepage": "https://7it.co.il/7maps/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XLSV777/7maps.git",
+    "directory": "packages/sensor-js"
+  },
+  "bugs": "https://github.com/XLSV777/7maps/issues",
+  "keywords": ["mcp", "model-context-protocol", "gateway", "telemetry", "7maps"],
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./mcp-sdk": "./src/mcp-sdk.js",
+    "./package.json": "./package.json"
+  },
+  "files": ["src", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "scripts": {
+    "test": "node --test test/sensor.test.mjs"
+  }
+}

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sevenmaps-sensor-litellm"
+version = "0.1.0"
+description = "7Maps sensor for the LiteLLM proxy MCP gateway (a CustomLogger). Opt-in; sends per-call outcomes only."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "7IT", email = "lior@7it.co.il" }]
+dependencies = ["sevenmaps-sensor @ git+https://github.com/XLSV777/7maps@main#subdirectory=packages/sensor-py"]
+
+[project.urls]
+Homepage = "https://7it.co.il/7maps/"
+Source = "https://github.com/XLSV777/7maps/tree/main/packages/sensor-litellm"
+
+[tool.setuptools]
+py-modules = ["sevenmaps_sensor_litellm"]
