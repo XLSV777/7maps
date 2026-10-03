@@ -1,7 +1,7 @@
 {
   "name": "7maps",
-  "version": "1.0.0",
-  "description": "Live map of public MCP servers for AI agents: which server and tool to use, condition before connecting, changes since approval. Gemini CLI extension and Claude Code plugin.",
+  "version": "1.1.0",
+  "description": "Live map of public MCP servers for AI agents: find the right tool among about 250,000, check a server before connecting, and see what changed since a person approved it.",
   "author": {
     "name": "7IT Solutions",
     "url": "https://7it.co.il/"
@@ -13,7 +13,7 @@
     "mcp",
     "directory",
     "routing",
-    "x402",
+    "tool-search",
     "agents"
   ]
 }
