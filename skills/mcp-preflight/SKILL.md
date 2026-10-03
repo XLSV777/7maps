@@ -7,7 +7,7 @@ description: Use this before connecting to or calling an MCP server you have not
 
 7Maps is a map of software, not geography: it checks every remote MCP server in the official registry each day, and rates each tool read-only, needs approval or high risk.
 
-1. Looking for a tool that does a job: call `find_tool` with the job in plain words (no charge). It searches about 250,000 tools and returns the tool, its server, its risk level and whether the server is answering.
+1. Looking for a tool that does a job: call `find_tool` with the job in plain words (no charge). It searches over 200,000 tools and returns the tool, its server, its risk level and whether the server is answering.
 2. Choosing a server for a task: call `route` with the task in plain words. Use the returned server and tool; keep the alternatives as fallbacks and skip the servers listed under avoid.
 3. Before connecting to a known server: call `road_conditions` with its URL or registry name. If the status is down or a sign-in is needed that you do not have, do not connect.
 4. Before re-using a server a person approved: call `watch` with the approval date. If a tool became riskier or the payee changed, ask the person again before calling it.
