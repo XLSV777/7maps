@@ -1,0 +1,12 @@
+{
+  "description": "7Maps: at session start, one line per configured MCP server that is on the public 7Maps down list. Downloads the list (kept 10 minutes) and compares hashes on this machine; no server address is sent. Off: SEVENMAPS_HOOK=off. Loaded by Claude Code (CLAUDE_PLUGIN_ROOT) and Gemini CLI (extensionPath); each leaves the other's variable empty.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}${extensionPath}/hooks/session-start.mjs\"" }
+        ]
+      }
+    ]
+  }
+}
