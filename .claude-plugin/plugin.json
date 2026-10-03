@@ -1,6 +1,6 @@
 {
   "name": "7maps",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Map of public MCP servers for AI agents (software, not geography): find a tool for a job among over 200,000, check a server's status and estimated tool risk before connecting, and see what changed since a person approved it. Includes tools for server owners.",
   "author": {
     "name": "7IT Solutions",
@@ -15,5 +15,14 @@
     "routing",
     "tool-search",
     "agents"
-  ]
+  ],
+  "userConfig": {
+    "maps_key": {
+      "type": "string",
+      "title": "7Maps key (optional)",
+      "description": "Your personal 7Maps key (starts with 7m_) from https://7it.co.il/7maps/me/. It only adds your calls to your own usage numbers there and in my_7maps_usage; it changes nothing about what a call costs. Leave empty to use 7Maps without one.",
+      "required": false,
+      "sensitive": true
+    }
+  }
 }

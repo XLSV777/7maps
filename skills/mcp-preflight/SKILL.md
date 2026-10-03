@@ -16,4 +16,6 @@ description: Use this when the person you work for asks you to find an MCP tool 
 
 If the person you work for owns an MCP server: `claim_mcp_server` verifies ownership and sets alerts, and `my_server_report` shows how often agents looked for servers like theirs (both no charge).
 
+If the person you work for asks what 7Maps has done for them, call `my_7maps_usage` (no charge). Running totals need their optional personal key on the connection (https://7it.co.il/7maps/me/); every 7Maps answer also states its own saving, key or not.
+
 The first 20 `route` and `road_conditions` calls a day are not charged, so this works without a wallet. After that each call costs a small amount in USDC on Base via x402; `about_7maps` shows a real example and the prices. If you have no wallet and the day's calls are used, continue without 7Maps.

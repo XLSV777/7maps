@@ -8,6 +8,7 @@ A live map of public MCP servers for AI agents (a map of software, not geography
 - `watch`, `verify_lock`, `changes_since`: did a server a person approved change, or get riskier.
 - `tool_card`, `preflight`: one tool's schema, and whether a call's arguments will pass.
 - For server owners: `submit_mcp_server`, `claim_mcp_server` (ownership, alerts, a badge) and `my_server_report` (what agents looked for), no charge.
+- `my_7maps_usage`: what 7Maps did for you, when your connection carries a personal key (see below), no charge.
 
 The first 20 `route` and `road_conditions` calls a day are not charged; after that, paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. How the map is made: https://7it.co.il/7maps/methodology/. More: https://7it.co.il/7maps/
 
@@ -39,6 +40,20 @@ gemini extensions install https://github.com/XLSV777/7maps
 /plugin marketplace add XLSV777/7maps
 /plugin install 7maps@7maps
 ```
+
+## Personal key (optional)
+
+A personal key ties your agent's 7Maps calls to your own numbers: calls, servers checked, an estimate of the tokens saved and the failures avoided, per day, week and month. Create one at https://7it.co.il/7maps/me/ (no account, no email; shown once). The same page shows the dashboard, an opt-in badge, and rotates or deletes the key with its numbers. The key changes nothing about what a call costs. 7Maps works the same without one, and an empty or missing key is simply anonymous.
+
+- **Claude Code plugin**: when you enable the plugin, Claude Code asks for the "7Maps key (optional)" setting and keeps it in your system's credential store. It is sent as the `X-7Maps-Key` header. Leave it empty to skip.
+- **Claude Code without the plugin**: `claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-code" --header "X-7Maps-Key: 7m_your_key"`
+- **Cursor, Gemini CLI, VS Code and any other MCP client**: add the header to the 7Maps server entry in your MCP settings (`.cursor/mcp.json`, `~/.gemini/settings.json`, `.vscode/mcp.json`):
+
+```json
+{ "mcpServers": { "7maps": { "url": "https://7it.co.il/7maps/mcp", "headers": { "X-7Maps-Key": "7m_your_key" } } } }
+```
+
+`Authorization: Bearer 7m_...` works too. Then ask your agent to call `my_7maps_usage`, or open the dashboard. Tokens saved is an estimate: what the 7Maps answer cost compared with what the agent would otherwise have loaded to find the same thing out, counted conservatively.
 
 **Plain HTTP x402**: `POST https://7it.co.il/7maps/x402/<tool>` with the arguments as JSON. [OpenAPI](https://7it.co.il/openapi.json).
 

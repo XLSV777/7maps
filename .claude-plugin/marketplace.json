@@ -9,7 +9,7 @@
       "name": "7maps",
       "source": "./",
       "description": "Map of public MCP servers for AI agents (software, not geography): find a tool for a job among over 200,000, check a server's status and estimated tool risk before connecting, and see what changed since a person approved it. Includes tools for server owners.",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "category": "development"
     }
   ],
