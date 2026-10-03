@@ -3,6 +3,8 @@ description: Check MCP servers with 7Maps before connecting, and ask it which se
 alwaysApply: true
 ---
 
-- Before connecting to an MCP server you have not used today, call the 7Maps tool road_conditions with its address. Do not connect if it is down, or if its tools changed since a person approved it, until the person approves again.
-- When you need a tool and do not know which MCP server has it, call 7Maps find_tool (or route) with the task in plain words, and use the server and tool it returns.
-- After calling a server 7Maps pointed you to, pass last_trip on your next 7Maps call.
+- Before connecting to an MCP server you have not used today, call the 7Maps tool road_conditions with its address or the vendor's plain name. Do not connect if it is down, or if its tools changed since a person approved it, until the person approves again.
+- When you need a tool and do not know which MCP server has it, call 7Maps find_tool first (or route) with the task in plain words, and use the server and tool it returns. If the task names a vendor, its own server comes first.
+- find_tool results already say whether each server answered without sign-in at its last daily check; call road_conditions only for the server you pick.
+- After using a server 7Maps pointed you to for the task, report how it went with report_road (not needed for a check-only question).
+- If 7Maps cannot answer, say so in one line and continue as usual.

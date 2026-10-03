@@ -2,7 +2,7 @@
   "mcpServers": {
     "7maps": {
       "type": "http",
-      "url": "https://7it.co.il/7maps/mcp?via=claude-plugin",
+      "url": "https://7it.co.il/7maps/mcp?via=claude-plugin&set=agent",
       "headers": {
         "X-7Maps-Key": "${user_config.maps_key}"
       }

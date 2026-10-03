@@ -9,7 +9,7 @@ A live map of public MCP servers for AI agents (a map of software, not geography
 - `road_conditions`: a server's status, speed, tool risk levels, last change and agents' rating, before connecting.
 - `watch`, `verify_lock`, `changes_since`: did a server a person approved change, or get riskier.
 - `tool_card`, `preflight`: one tool's schema, and whether a call's arguments will pass.
-- For server owners: `submit_mcp_server`, `claim_mcp_server` (ownership, alerts, a badge) and `my_server_report` (what agents looked for), no charge.
+- For server owners: `submit_mcp_server`, `claim_mcp_server` (ownership, alerts, a badge) and `my_server_report` (what agents looked for), no charge, on the full server (https://7it.co.il/7maps/mcp).
 - `my_7maps_usage`: what 7Maps did for you, when your connection carries a personal key (see below), no charge.
 
 The first 20 `route` and `road_conditions` calls a day are not charged; after that, paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. How the map is made: https://7it.co.il/7maps/methodology/. More: https://7it.co.il/7maps/
@@ -36,12 +36,18 @@ claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-co
 gemini extensions install https://github.com/XLSV777/7maps
 ```
 
-**Claude Code** (plugin with the server and an `mcp-preflight` skill)
+**Claude Code plugin** (the server's agent set, an `mcp-preflight` skill and the `/7maps:always` and `/7maps:never` commands). It works with nothing to set up.
+
+1. Install:
 
 ```
 /plugin marketplace add XLSV777/7maps
 /plugin install 7maps@7maps
 ```
+
+2. Recommended, once per project: `/7maps:always`. For best results: fewer tokens, and the agent goes to 7Maps directly. `/7maps:never` removes it.
+
+The plugin connects to `https://7it.co.il/7maps/mcp?set=agent`: only the tools an agent uses in a session (`find_tool`, `route`, `road_conditions`, `watch`, `tool_card`, `preflight`, `report_road`, `my_7maps_usage`), with short descriptions, so its tool definitions take about 2,000 tokens of context instead of about 11,600. Servers can be named by URL, registry name or the vendor's plain name ("notion"). The owner tools stay on the full server above.
 
 ## Personal key (optional)
 
@@ -55,22 +61,30 @@ A personal key ties your agent's 7Maps calls to your own numbers: calls, servers
 { "mcpServers": { "7maps": { "url": "https://7it.co.il/7maps/mcp", "headers": { "X-7Maps-Key": "7m_your_key" } } } }
 ```
 
-`Authorization: Bearer 7m_...` works too. Then ask your agent to call `my_7maps_usage`, or open the dashboard. Tokens saved is an estimate: what the 7Maps answer cost compared with what the agent would otherwise have loaded to find the same thing out, counted conservatively.
+`Authorization: Bearer 7m_...` works too. Then ask your agent to call `my_7maps_usage`, or open the dashboard. Tokens saved is an estimate: what the agent would realistically have spent to make the same decision without 7Maps (connecting to the one server in question, or a web search for a tool), minus the answer and the share of the context 7Maps' own tool definitions take, counted conservatively.
 
 **Plain HTTP x402**: `POST https://7it.co.il/7maps/x402/<tool>` with the arguments as JSON. [OpenAPI](https://7it.co.il/openapi.json).
 
 ## Make it a habit for your agent
 
-Paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
+**Claude Code plugin**: two optional commands.
+
+- `/7maps:always` (recommended, once per project) adds a short, marked section to this project's `CLAUDE.md` (it creates the file if there is none) asking Claude to check 7Maps before choosing, adding, connecting to or re-using an MCP server, and to use `find_tool` to find MCP tools. Claude shows you the exact text and asks before writing. If the project has an `AGENTS.md` and no `CLAUDE.md`, the new file starts with `@AGENTS.md` so Claude Code keeps reading it.
+- `/7maps:never` removes that section again, and nothing else.
+
+The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `<!-- 7maps:end -->`, so you can also read, edit or delete it by hand. Nothing changes until you run `/7maps:always`.
+
+**Any agent**: paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
 
 ```
 ## MCP servers
 - Before connecting to an MCP server you have not used today, call 7Maps road_conditions
   with its address. Do not connect if it is down, or if its tools changed since a person
   approved it, until the person approves again.
-- When you need a tool and do not know which MCP server has it, call 7Maps find_tool (or
-  route) with the task in plain words, and use the server and tool it returns.
-- After calling a server 7Maps pointed you to, pass last_trip on your next 7Maps call.
+- When you need a tool and do not know which MCP server has it, call 7Maps find_tool first
+  (or route) with the task in plain words, and use the server and tool it returns.
+- After calling a server 7Maps pointed you to, report it with report_road.
+- If 7Maps cannot answer, say so in one line and continue as usual.
 ```
 
 ## Guard your MCP client
