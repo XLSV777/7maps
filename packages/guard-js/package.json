@@ -1,0 +1,45 @@
+{
+  "name": "7maps-guard",
+  "version": "0.1.0",
+  "description": "MCP client middleware: check a server on the 7Maps map before connecting, and optionally report how calls went.",
+  "license": "MIT",
+  "author": "7IT (https://7it.co.il/)",
+  "homepage": "https://7it.co.il/7maps/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XLSV777/7maps.git",
+    "directory": "packages/guard-js"
+  },
+  "bugs": "https://github.com/XLSV777/7maps/issues",
+  "keywords": ["mcp", "model-context-protocol", "ai-agents", "guard", "middleware", "7maps"],
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": { "7maps-guard": "./dist/cli.js" },
+  "files": ["dist", "README.md", "LICENSE"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/guard.test.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "@modelcontextprotocol/sdk": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@modelcontextprotocol/sdk": { "optional": true }
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.0",
+    "@types/node": "^18.19.0",
+    "typescript": "~5.9.0"
+  }
+}

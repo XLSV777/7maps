@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sevenmaps-guard"
+version = "0.1.0"
+description = "MCP client middleware: check a server on the 7Maps map before connecting, and optionally report how calls went."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "7IT", email = "lior@7it.co.il" }]
+keywords = ["mcp", "model-context-protocol", "ai-agents", "guard", "7maps"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = []
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.0"]
+
+[project.urls]
+Homepage = "https://7it.co.il/7maps/"
+Source = "https://github.com/XLSV777/7maps/tree/main/packages/guard-py"
+Issues = "https://github.com/XLSV777/7maps/issues"
+
+[tool.setuptools]
+packages = ["sevenmaps_guard"]

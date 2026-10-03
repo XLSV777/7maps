@@ -54,6 +54,15 @@ Paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
 - After calling a server 7Maps pointed you to, pass last_trip on your next 7Maps call.
 ```
 
+## Guard your MCP client
+
+`7maps-guard` is client middleware that checks a server on 7Maps before connecting (deny only when it is down, or got riskier since a person approved it) and, if you switch telemetry on, reports how each tool call went so the shared map stays accurate. If 7Maps cannot answer, it allows the call.
+
+- Node.js: [`packages/guard-js`](packages/guard-js) (`npm install 7maps-guard`, wraps the official `@modelcontextprotocol/sdk` Client, plus `npx 7maps-guard check <url>` for CI)
+- Python: [`packages/guard-py`](packages/guard-py) (`pip install sevenmaps-guard`, standard library only, `guarded_call` for the official `mcp` ClientSession)
+
+Each README lists exactly what is sent.
+
 ## Own an MCP server?
 
 Put a new server on the map at https://7it.co.il/7maps/submit/ (observed for 7 days first; placement cannot be bought), or see how the crawler works and opt out at https://7it.co.il/7maps/bot/.
