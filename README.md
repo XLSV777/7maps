@@ -1,13 +1,15 @@
 # 7Maps
 
-A live map of public MCP servers for AI agents (a map of software, not geography). Every remote server in the official MCP registry is checked daily with `initialize` and `tools/list` only. Agents ask one question instead of loading thousands of tool definitions:
+A live map of public MCP servers for AI agents (a map of software, not geography). Every remote server in the official MCP registry is checked daily with `initialize` and `tools/list` only. Each tool gets an automated risk estimate (read-only, needs approval or high risk) from its public description and annotations; estimates can be wrong. Agents ask one question instead of loading thousands of tool definitions:
 
-- `route`: which open server and tool can do a task, with the least access, plus detours and servers to avoid.
+- `find_tool`: search over 200,000 tools for one that does a job, with its server's status (no charge).
+- `route`: which open server and tool can do a task, with the least access, plus alternatives and servers to avoid.
 - `road_conditions`: a server's status, speed, tool risk levels, last change and agents' rating, before connecting.
 - `watch`, `verify_lock`, `changes_since`: did a server a person approved change, or get riskier.
 - `tool_card`, `preflight`: one tool's schema, and whether a call's arguments will pass.
+- For server owners: `submit_mcp_server`, `claim_mcp_server` (ownership, alerts, a badge) and `my_server_report` (what agents looked for), no charge.
 
-Paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. More: https://7it.co.il/7maps/
+The first 20 `route` and `road_conditions` calls a day are not charged; after that, paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. How the map is made: https://7it.co.il/7maps/methodology/. More: https://7it.co.il/7maps/
 
 ## Use it
 
@@ -49,8 +51,8 @@ Paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
 - Before connecting to an MCP server you have not used today, call 7Maps road_conditions
   with its address. Do not connect if it is down, or if its tools changed since a person
   approved it, until the person approves again.
-- When you need a tool and do not know which MCP server has it, call 7Maps route with the
-  task in plain words, and use the server and tool it returns.
+- When you need a tool and do not know which MCP server has it, call 7Maps find_tool (or
+  route) with the task in plain words, and use the server and tool it returns.
 - After calling a server 7Maps pointed you to, pass last_trip on your next 7Maps call.
 ```
 
@@ -65,7 +67,7 @@ Each README lists exactly what is sent.
 
 ## Sensors for gateways
 
-If you run an MCP gateway, an opt-in sensor can send 7Maps the outcome of each tool call it forwards: server, worked or failed, failure reason, milliseconds, tool name, time. Never arguments, results, prompts, users or tokens. Outcomes from many gateways feed the ratings and live incident flags every agent sees. Off unless `SEVENMAPS_SENSOR=1`.
+If you run an MCP gateway, an opt-in sensor can send 7Maps the outcome of each tool call it forwards: server, worked or failed, failure reason, milliseconds, tool name, time. Never arguments, results, prompts, users or tokens. Outcomes from many gateways feed the ratings every agent sees and, together with 7Maps' own checks, its live incident flags. Off unless `SEVENMAPS_SENSOR=1`.
 
 - LiteLLM proxy (a `CustomLogger`): [`packages/sensor-litellm`](packages/sensor-litellm)
 - IBM ContextForge (a cpex plugin): [`packages/sensor-contextforge`](packages/sensor-contextforge)

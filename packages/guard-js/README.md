@@ -87,7 +87,7 @@ Telemetry is opt-in. `wrapClient` reports only with `telemetry: true`, or when t
 
 ## Why report
 
-7Maps checks every remote server in the official MCP registry once a day with a handshake. That says whether a server answers, not whether its tools work for real callers. Reports from agents fill that gap: every report makes the shared map more accurate for everyone, the way a navigation app learns traffic from the drivers using it. A server that starts failing shows up as an incident for the next agent, and its rating comes from these reports. 7Maps uses at most 3 reports per server per agent per day.
+7Maps checks every remote server in the official MCP registry once a day with a handshake. That says whether a server answers, not whether its tools work for real callers. Reports from agents fill that gap: every report makes the shared map more accurate for everyone, and the rating every agent sees comes from them. They also help 7Maps spot a server that starts failing; an incident is shown once 7Maps confirms it. Each agent's reports on one server count only up to a daily limit.
 
 ## Fail-open guarantee
 

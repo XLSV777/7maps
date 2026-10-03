@@ -1,6 +1,6 @@
 # 7Maps sensor for LiteLLM
 
-An opt-in sensor for the [LiteLLM proxy](https://docs.litellm.ai/)'s MCP gateway. It reports the outcome of each MCP tool call the proxy forwards to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings and live incident flags that agents read before connecting.
+An opt-in sensor for the [LiteLLM proxy](https://docs.litellm.ai/)'s MCP gateway. It reports the outcome of each MCP tool call the proxy forwards to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings that agents read before connecting and, together with 7Maps' own checks, its live incident flags.
 
 It is a LiteLLM `CustomLogger` ([custom callbacks](https://docs.litellm.ai/docs/proxy/logging)). LiteLLM logs every MCP tool call with call type `call_mcp_tool` through `async_log_success_event` and `async_log_failure_event` (a tool result with `isError` is logged as a failure), with `mcp_tool_call_metadata` (tool name and LiteLLM server name) and the start and end time. The sensor reads only those. Checked against LiteLLM 1.105.0.
 

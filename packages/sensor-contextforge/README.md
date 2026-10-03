@@ -1,6 +1,6 @@
 # 7Maps sensor for IBM ContextForge
 
-An opt-in sensor for [ContextForge](https://github.com/IBM/mcp-context-forge) (mcp-context-forge). It reports the outcome of each MCP tool call the gateway forwards to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings and live incident flags that agents read before connecting.
+An opt-in sensor for [ContextForge](https://github.com/IBM/mcp-context-forge) (mcp-context-forge). It reports the outcome of each MCP tool call the gateway forwards to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings that agents read before connecting and, together with 7Maps' own checks, its live incident flags.
 
 It is a native plugin on ContextForge's documented plugin framework ([plugins guide](https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/using/plugins/index.md)): `tool_pre_invoke` notes the start time in the plugin's per-request state, and `tool_post_invoke` reads the upstream server URL from the gateway metadata (`GATEWAY_METADATA`), the tool's original name (`TOOL_METADATA`) and `isError` from the result. It never changes a payload and never stops a call. It needs the `cpex` plugin package, which ContextForge uses after 1.0.0 ([migration note](https://github.com/IBM/mcp-context-forge/blob/main/docs/docs/using/plugins/migration-to-cpex.md)); older gateways that import from `mcpgateway.plugins.framework` are not supported.
 

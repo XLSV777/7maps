@@ -1,6 +1,6 @@
 # sevenmaps-sensor (Python)
 
-An opt-in sensor for MCP gateways and clients. It reports the outcome of each MCP tool call (which server, worked or failed, why, how long, which tool) to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings and live incident flags that agents read before connecting. Standard library only, Python 3.9 or later.
+An opt-in sensor for MCP gateways and clients. It reports the outcome of each MCP tool call (which server, worked or failed, why, how long, which tool) to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings that agents read before connecting and, together with 7Maps' own checks, its live incident flags. Standard library only, Python 3.9 or later.
 
 This package is the core reporter plus an adapter for the official MCP Python SDK. Gateway adapters build on it:
 

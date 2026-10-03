@@ -1,19 +1,19 @@
 {
-    "name":  "7maps",
-    "owner":  {
-                  "name":  "7IT Solutions",
-                  "url":  "https://7it.co.il/"
-              },
-    "plugins":  [
-                    {
-                        "name":  "7maps",
-                        "source":  "./",
-                        "description":  "Live map of public MCP servers for AI agents: find the right tool among over 200,000, check a server before connecting, and see what changed since a person approved it.",
-                        "version":  "1.1.0",
-                        "category":  "development"
-                    }
-                ],
-    "metadata":  {
-                     "description":  "The 7Maps plugin: a live map of public MCP servers for choosing and checking servers before connecting."
-                 }
+  "name": "7maps",
+  "owner": {
+    "name": "7IT Solutions",
+    "url": "https://7it.co.il/"
+  },
+  "plugins": [
+    {
+      "name": "7maps",
+      "source": "./",
+      "description": "Map of public MCP servers for AI agents (software, not geography): find a tool for a job among over 200,000, check a server's status and estimated tool risk before connecting, and see what changed since a person approved it. Includes tools for server owners.",
+      "version": "1.1.1",
+      "category": "development"
+    }
+  ],
+  "metadata": {
+    "description": "The 7Maps plugin: a map of public MCP servers for finding tools and checking servers before connecting."
+  }
 }

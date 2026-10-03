@@ -1,6 +1,6 @@
 # 7maps-sensor (Node.js)
 
-An opt-in sensor for MCP gateways and clients. It reports the outcome of each MCP tool call (which server, worked or failed, why, how long, which tool) to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings and live incident flags that agents read before connecting. No dependencies, Node 18 or later, ESM.
+An opt-in sensor for MCP gateways and clients. It reports the outcome of each MCP tool call (which server, worked or failed, why, how long, which tool) to [7Maps](https://7it.co.il/7maps/), where outcomes from many gateways become the shared ratings that agents read before connecting and, together with 7Maps' own checks, its live incident flags. No dependencies, Node 18 or later, ESM.
 
 This package is the core reporter plus an adapter for the official MCP TypeScript SDK client. Python gateways: [`packages/sensor-py`](../sensor-py), [`packages/sensor-litellm`](../sensor-litellm), [`packages/sensor-contextforge`](../sensor-contextforge).
 

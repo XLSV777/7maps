@@ -1,11 +1,11 @@
 ---
 name: mcp-preflight
-description: Use this before connecting to or calling an MCP server you have not used today, when looking for an MCP tool that can do a job, when choosing which MCP server to use for a task, or when re-using a server a person approved earlier. Checks the server's live condition on 7Maps instead of loading its full tool list.
+description: Use this when the person you work for asks you to find an MCP tool for a job, to choose or add an MCP server, to connect to one, or to re-use one they approved earlier. Checks the server's live condition on 7Maps instead of loading its full tool list. Not for tasks that do not involve choosing or connecting MCP servers.
 ---
 
 # MCP preflight with 7Maps
 
-7Maps is a map of software, not geography: it checks every remote MCP server in the official registry each day, and rates each tool read-only, needs approval or high risk.
+7Maps is a map of software, not geography: it checks every remote MCP server in the official registry each day, and gives each tool an automated risk estimate (read-only, needs approval or high risk) from its public description and annotations. Estimates can be wrong; treat them as a first check, not a verdict.
 
 1. Looking for a tool that does a job: call `find_tool` with the job in plain words (no charge). It searches over 200,000 tools and returns the tool, its server, its risk level and whether the server is answering.
 2. Choosing a server for a task: call `route` with the task in plain words. Use the returned server and tool; keep the alternatives as fallbacks and skip the servers listed under avoid.
