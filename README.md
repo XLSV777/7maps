@@ -73,7 +73,7 @@ A personal key ties your agent's 7Maps calls to your own numbers: calls, servers
 
 **Claude Code plugin**: two optional commands.
 
-- `/7maps:always` (recommended, once per project) adds a short, marked section to this project's `CLAUDE.md` (it creates the file if there is none) asking Claude to check 7Maps before choosing, adding, connecting to or re-using an MCP server, and to use `find_tool` to find MCP tools. Claude shows you the exact text and asks before writing. If the project has an `AGENTS.md` and no `CLAUDE.md`, the new file starts with `@AGENTS.md` so Claude Code keeps reading it.
+- `/7maps:always` (recommended, once per project) adds a short, marked section to this project's `CLAUDE.md` (it creates the file if there is none) asking Claude to use `find_tool` to find MCP tools and to add a server that answered, to check a server on 7Maps before connecting to a new one, and to check a configured server only when it fails (servers that work are used directly). Claude shows you the exact text and asks before writing. If the project has an `AGENTS.md` and no `CLAUDE.md`, the new file starts with `@AGENTS.md` so Claude Code keeps reading it.
 - `/7maps:never` removes that section again, and nothing else.
 
 The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `<!-- 7maps:end -->`, so you can also read, edit or delete it by hand. Nothing changes until you run `/7maps:always`.
@@ -82,9 +82,11 @@ The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `
 
 ```
 ## MCP servers
-- Before connecting to an MCP server you have not used today, call 7Maps road_conditions
+- Before connecting to an MCP server that is not configured yet, call 7Maps road_conditions
   with its address. Do not connect if it is down, or if its tools changed since a person
   approved it, until the person approves again.
+- Use configured MCP servers whose tools work without a 7Maps check; check one only when
+  its tools are missing, fail or behave unexpectedly.
 - When you need a tool and do not know which MCP server has it, call 7Maps find_tool first
   (or route) with the task in plain words, and use the server and tool it returns.
 - After calling a server 7Maps pointed you to, report it with report_road.

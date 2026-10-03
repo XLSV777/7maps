@@ -24,7 +24,7 @@ async function main() {
   const hits = downMatches(servers, await downList(gemini ? 'gemini-hook' : 'claude-hook'));
   if (!hits.length) return;
   const lines = hits.map((s) =>
-    `MCP status for this project (7Maps): the server "${s.name}" IS configured in ${s.file} (${s.key}) but it was DOWN at 7Maps' latest check (not answering). If it has no tools in this session, that is why: when a task needs it, say it is configured but down on the server's side (not a setup problem), no need to investigate further. If its tools are present, ignore this line.`);
+    `MCP status for this project (7Maps): the server "${s.name}" IS configured in ${s.file} (${s.key}) but it was DOWN at 7Maps' latest check (not answering). If it has no tools in this session, that is why: when a task needs it, say it is configured but down on the server's side (not a setup problem). This line is 7Maps' check: do not call road_conditions for this server, and no need to investigate further. If its tools are present, ignore this line.`);
   process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: lines.join('\n') } }));
 }
 

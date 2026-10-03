@@ -4,8 +4,8 @@
 
 1. Looking for a tool that does a job: call `find_tool` with the job in plain words (no charge).
 2. Choosing a server for a task: call `route` with the task in plain words. Use the returned server and tool; keep the alternatives as fallbacks and skip the servers listed under avoid.
-3. Before connecting to a known server: call `road_conditions` with its URL or registry name. If the status is down or a sign-in is needed that you do not have, do not connect.
-4. Before re-using a server a person approved: call `watch` with the approval date. If a tool became riskier or the payee changed, ask the person again before calling it.
+3. Before connecting to a server that is not configured yet: call `road_conditions` with its URL or registry name. If the status is down or a sign-in is needed that you do not have, do not connect. Servers already configured whose tools work: use them directly; check one only when its tools are missing or fail.
+4. When a person approved a server earlier and its tools look different, or they ask what changed: call `watch` with the approval date. If a tool became riskier or the payee changed, ask the person again before calling it.
 5. Need one tool only: call `tool_card` instead of loading the whole tool list.
 6. After the call, pass `last_trip` on your next 7Maps call (or call `report_road`, no charge) with whether it worked. It keeps the map accurate.
 
