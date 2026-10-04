@@ -2,7 +2,7 @@
   "name": "7maps",
   "displayName": "7Maps",
   "description": "Map of public MCP servers (software, not geography): find a tool for a job, check a server's status and estimated tool risk before connecting, and see what changed since approval. The first 20 route and road_conditions calls a day are not charged; then x402. Measured October 2026 on Opus 5.5: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "author": {
     "name": "7IT Solutions",
     "url": "https://7it.co.il/"

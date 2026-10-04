@@ -95,7 +95,7 @@ The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `
 
 ## Guard your MCP client
 
-`7maps-guard` is client middleware that checks a server on 7Maps before connecting (deny only when it is down, or got riskier since a person approved it) and, if you switch telemetry on, reports how each tool call went so the shared map stays accurate. If 7Maps cannot answer, it allows the call.
+`7maps-guard` (not the same as the 7IT Guard plugin below) is client middleware that checks a server on 7Maps before connecting (deny only when it is down, or got riskier since a person approved it) and, if you switch telemetry on, reports how each tool call went so the shared map stays accurate. If 7Maps cannot answer, it allows the call.
 
 - Node.js: [`packages/guard-js`](packages/guard-js) (`npm install 7maps-guard`, wraps the official `@modelcontextprotocol/sdk` Client, plus `npx 7maps-guard check <url>` for CI)
 - Python: [`packages/guard-py`](packages/guard-py) (`pip install sevenmaps-guard`, standard library only, `guarded_call` for the official `mcp` ClientSession)
@@ -113,8 +113,40 @@ If you run an MCP gateway, an opt-in sensor can send 7Maps the outcome of each t
 
 Each README shows the exact payload, what is never sent, and how to switch it on and off.
 
+## 7IT Guard, in the same marketplace
+
+The 7Maps marketplace also lists [7IT Guard](https://github.com/XLSV777/7it-guard), a separate plugin that checks a deployed web app from the outside before it ships (security headers, exposed files, the Supabase or Firebase backend, email authentication, speed, accessibility, SEO), on your own machine. When the app publishes an MCP server, its report says whether that server is on 7Maps. Install it on its own; the 7Maps plugin does not need it:
+
+```
+/plugin install 7it-guard@7maps
+```
+
+Docs: https://7it.co.il/tools/guard/
+
+**One 7IT key** will unlock both plugins: the 7Maps key setting (`maps_key`) and the 7IT Guard key setting (`fix_key`) take the same key. The setting names stay as they are, and both plugins work fully without a key.
+
 ## Own an MCP server?
 
 Put a new server on the map at https://7it.co.il/7maps/submit/ (observed for 7 days first; placement cannot be bought), or see how the crawler works and opt out at https://7it.co.il/7maps/bot/.
+
+## Privacy
+
+What the plugin sends, and to whom:
+
+- **The MCP connection.** The plugin's `.mcp.json` connects your agent to `https://7it.co.il/7maps/mcp?via=claude-plugin&set=agent`. Each tool call sends that tool's arguments (a job in plain words, a server address or name, a tool name) to 7Maps. 7IT keeps a usage record per call (the tool, the client software, whether it worked, the time taken, the country derived from the network address, the server the call was about) for 90 days; the IP address is not stored. With the optional key set, the key is sent as the `X-7Maps-Key` header and the per-call counts described at https://7it.co.il/7maps/me/ are kept for it.
+- **The session-start hook** (`hooks/hooks.json`, `hooks/session-start.mjs`, `hooks/down-list.mjs`). It reads the MCP server addresses configured on your machine for the project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`), downloads the public list `https://7it.co.il/7maps/down.json` (at most every 10 minutes, kept in your temp folder), hashes the addresses on your machine and compares. No server address, name or setting is sent. 7IT counts the downloads, with no address. Off: `SEVENMAPS_HOOK=off`.
+- **Payments.** Paid calls (x402) carry the payment your agent signs; 7IT keeps the paying wallet, the amount and the transaction id.
+- Nothing else: no telemetry, no analytics, no background requests.
+
+Privacy policy: https://7it.co.il/privacy/#7maps
+
+## Uninstall
+
+```
+/plugin uninstall 7maps@7maps
+/plugin marketplace remove 7maps
+```
+
+Removing the marketplace also removes 7IT Guard if you installed it from there. If you ran `/7maps:always` in a project, run `/7maps:never` there first (or delete the marked 7Maps section from its `CLAUDE.md`). Gemini CLI: `gemini extensions uninstall 7maps`. Cursor and VS Code: delete the 7maps entry from your MCP settings. If you added only the server: `claude mcp remove 7maps`.
 
 By [7IT](https://7it.co.il/). Registry name: `io.github.XLSV777/7maps`.

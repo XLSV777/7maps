@@ -9,11 +9,24 @@
       "name": "7maps",
       "source": "./",
       "description": "Map of public MCP servers for AI agents (software, not geography): find a tool for a job among over 200,000, check a server's status and estimated tool risk before connecting, and see what changed since a person approved it. Works with nothing to set up. Measured October 2026 on Opus 5.5: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/",
-      "version": "1.4.2",
+      "version": "1.5.0",
       "category": "development"
+    },
+    {
+      "name": "7it-guard",
+      "source": {
+        "source": "github",
+        "repo": "XLSV777/7it-guard"
+      },
+      "displayName": "7IT Guard",
+      "description": "Checks a deployed web app from the outside before it ships, on your own machine: HTTPS and security headers, a public source map, email authentication, speed, accessibility, SEO and reliability, plus exposed files, keys in the browser code and the Supabase or Firebase backend once you confirm the app is yours. One graded, prioritized report. When the app publishes an MCP server, says whether it is on 7Maps.",
+      "homepage": "https://7it.co.il/tools/guard/",
+      "repository": "https://github.com/XLSV777/7it-guard",
+      "license": "MIT",
+      "category": "security"
     }
   ],
   "metadata": {
-    "description": "The 7Maps plugin: a map of public MCP servers for finding tools and checking servers before connecting."
+    "description": "Plugins by 7IT: 7Maps, a map of public MCP servers for finding tools and checking servers before connecting, and 7IT Guard, a pre-launch check of a deployed web app. Each installs and works on its own."
   }
 }
