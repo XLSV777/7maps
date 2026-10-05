@@ -19,7 +19,7 @@
         "repo": "XLSV777/7it-guard"
       },
       "displayName": "7IT Guard",
-      "description": "Checks a deployed web app from the outside before it ships, on your own machine: HTTPS and security headers, a public source map, email authentication, speed, accessibility, SEO and reliability, plus exposed files, keys in the browser code and the Supabase or Firebase backend once you confirm the app is yours. One graded, prioritized report. When the app publishes an MCP server, says whether it is on 7Maps.",
+      "description": "Checks a deployed web app from the outside before it ships, on your own machine: HTTPS and security headers, a public source map, email authentication, speed, accessibility, SEO and reliability, plus exposed files, keys in the browser code once you confirm the app is yours, and a guided Supabase Security Advisor step that never reads your data. One graded, prioritized report. When the app publishes an MCP server, says whether it is on 7Maps.",
       "homepage": "https://7it.co.il/tools/guard/",
       "repository": "https://github.com/XLSV777/7it-guard",
       "license": "MIT",

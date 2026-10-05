@@ -115,7 +115,7 @@ Each README shows the exact payload, what is never sent, and how to switch it on
 
 ## 7IT Guard, in the same marketplace
 
-The 7Maps marketplace also lists [7IT Guard](https://github.com/XLSV777/7it-guard), a separate plugin that checks a deployed web app from the outside before it ships (security headers, exposed files, the Supabase or Firebase backend, email authentication, speed, accessibility, SEO), on your own machine. When the app publishes an MCP server, its report says whether that server is on 7Maps. Install it on its own; the 7Maps plugin does not need it:
+The 7Maps marketplace also lists [7IT Guard](https://github.com/XLSV777/7it-guard), a separate plugin that checks a deployed web app from the outside before it ships (security headers, exposed files and keys, a guided Supabase Security Advisor step that never reads your data, email authentication, speed, accessibility, SEO), on your own machine. When the app publishes an MCP server, its report says whether that server is on 7Maps. Install it on its own; the 7Maps plugin does not need it:
 
 ```
 /plugin install 7it-guard@7maps
