@@ -118,3 +118,16 @@ test('session hook end to end: one update line, once per session, no server conf
     assert.equal(run(), '', 'the same session gets no second line');
   } finally { fs.rmSync(base, { recursive: true, force: true }); }
 });
+
+test('every fixed 7Maps address names this plugin version (pv), so the server can say once when it is behind', () => {
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  const version = JSON.parse(fs.readFileSync(path.join(root, '.claude-plugin', 'plugin.json'), 'utf8')).version;
+  const urls = [
+    JSON.parse(fs.readFileSync(path.join(root, '.mcp.json'), 'utf8')).mcpServers['7maps'].url,
+    JSON.parse(fs.readFileSync(path.join(root, 'mcp.json'), 'utf8')).mcpServers['7maps'].url,
+    JSON.parse(fs.readFileSync(path.join(root, 'gemini-extension.json'), 'utf8')).mcpServers['7maps'].httpUrl,
+  ];
+  for (const u of urls) assert.equal(new URL(u).searchParams.get('pv'), version, u);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'gemini-extension.json'), 'utf8')).version, version);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(root, '.cursor-plugin', 'plugin.json'), 'utf8')).version, version);
+});
