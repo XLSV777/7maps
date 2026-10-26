@@ -71,6 +71,9 @@ class SensorTests(unittest.TestCase):
 
     def test_wire_format(self):
         self.assertEqual(s.clean_server("https://u:p@mcp.example.com/mcp?api_key=SECRET#x"), "https://mcp.example.com/mcp")
+        self.assertEqual(s.clean_server("https://mcp.example.com/v1/a1b2c3d4e5f6g7h8i9j0k1/mcp"), "https://mcp.example.com/v1/*/mcp")
+        self.assertEqual(s.clean_server("https://mcp.example.com/sk_live/mcp"), "https://mcp.example.com/*/mcp")
+        self.assertEqual(s.clean_server("https://mcp.example.com/servers/github-issues-and-pulls/mcp"), "https://mcp.example.com/servers/github-issues-and-pulls/mcp")
         w = s.to_wire("https://mcp.example.com/mcp?t=1", False, "timeout", 1234.6, "search")
         self.assertEqual(set(w), {"server", "ok", "fail", "ms", "tool", "at"})
         self.assertEqual(w["ms"], 1235)

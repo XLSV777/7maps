@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sevenmaps-guard"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP client middleware: check a server on the 7Maps map before connecting, and optionally report how calls went."
 readme = "README.md"
 requires-python = ">=3.9"

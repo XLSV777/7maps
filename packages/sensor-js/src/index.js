@@ -14,7 +14,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 export const DEFAULT_ENDPOINT = 'https://7it.co.il/7maps/sensor';
 export const FAIL_REASONS = ['unreachable', 'auth', 'args', 'server_error', 'timeout', 'rate_limited', 'wrong_result'];
 const TOOL_NAME = /^[A-Za-z0-9_.:\/-]{1,128}$/;
@@ -28,14 +28,22 @@ export function sensorEnabled(explicit) {
   return explicit === true || env('SEVENMAPS_SENSOR') === '1';
 }
 
-/** Scheme, host and path only: query strings, fragments and user:password can carry keys. */
+/** A path segment that looks like a key: 20+ characters with letters and digits, or an sk_/pk_/rk_/ak_ prefix. */
+export function tokenLike(segment) {
+  const s = String(segment || '');
+  return /^(?:sk|pk|rk|ak)_/i.test(s) || (s.length >= 20 && /[A-Za-z]/.test(s) && /[0-9]/.test(s));
+}
+/** The path with every token-like segment replaced by '*'. */
+export const maskPath = (p) => String(p || '').split('/').map((seg) => (tokenLike(seg) ? '*' : seg)).join('/');
+
+/** Scheme, host and path only: query strings, fragments, user:password and token-like path segments can carry keys. */
 export function cleanServer(server) {
   const s = String(server || '').trim();
   try {
     const u = new URL(s);
-    if (u.protocol === 'http:' || u.protocol === 'https:') return `${u.protocol}//${u.host}${u.pathname}`.slice(0, 300);
+    if (u.protocol === 'http:' || u.protocol === 'https:') return `${u.protocol}//${u.host}${maskPath(u.pathname)}`.slice(0, 300);
   } catch { /* a registry name such as io.github.owner/repo */ }
-  return s.split(/[?#\s]/)[0].slice(0, 300);
+  return maskPath(s.split(/[?#\s]/)[0]).slice(0, 300);
 }
 
 /** Maps an error thrown by an MCP call to a 7Maps fail reason. */

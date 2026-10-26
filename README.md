@@ -49,7 +49,7 @@ gemini extensions install https://github.com/XLSV777/7maps
 
 2. Recommended, once per project: `/7maps:always`. For best results: fewer tokens, and the agent goes to 7Maps directly. `/7maps:never` removes it.
 
-**Servers already in your project.** At the start of each session (Claude Code, and Gemini CLI with the extension) the plugin's hook reads the MCP servers configured on your machine for this project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`). It downloads one public file, `https://7it.co.il/7maps/down.json`: the servers 7Maps saw not answering at their latest check, as short hashes. It keeps that file for 10 minutes in your system's temp folder, so most sessions make no request at all. It then hashes your servers' addresses on your machine and compares. **No server address, name or setting leaves your machine**: the only request is a plain download of that list, tagged with the client (`?via=claude-hook` or `?via=gemini-hook`). If a configured server is on the list, the agent gets one line saying so, and tells you "configured but down on the server's side" instead of "not configured" or a long investigation; if the server's tools are present anyway, the line tells the agent to ignore it. It adds nothing when none of your servers is on the list, and never blocks a session. Turn it off with the environment variable `SEVENMAPS_HOOK=off`. The hook needs `node` on your PATH; without it, it does nothing. The hashing is described in the list itself (`key`), so you can check it.
+**Servers already in your project.** At the start of each session (Claude Code, and Gemini CLI with the extension) the plugin's hook reads the MCP servers configured on your machine for this project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`). It downloads one public file, `https://7it.co.il/7maps/down.json`: the servers 7Maps saw not answering at their latest check, as short hashes. It keeps that file for 10 minutes in a cache folder of your own (`~/.cache/7maps`), so most sessions make no request at all. It then hashes your servers' addresses on your machine and compares. **No server address, name or setting leaves your machine**: the only request is a plain download of that list, tagged with the client (`?via=claude-hook` or `?via=gemini-hook`). If a configured server is on the list, the agent gets one line saying so, and tells you "configured but down on the server's side" instead of "not configured" or a long investigation; if the server's tools are present anyway, the line tells the agent to ignore it. It adds nothing when none of your servers is on the list, and never blocks a session. Turn it off with the environment variable `SEVENMAPS_HOOK=off`. The hook needs `node` on your PATH; without it, it does nothing. The hashing is described in the list itself (`key`), so you can check it.
 
 The plugin connects to `https://7it.co.il/7maps/mcp?set=agent`: only the tools an agent uses in a session (`find_tool`, `route`, `road_conditions`, `watch`, `tool_card`, `preflight`, `report_road`, `my_7maps_usage`), with short descriptions, so its tool definitions take about 2,000 tokens of context instead of about 11,600. Servers can be named by URL, registry name or the vendor's plain name ("notion"). The owner tools stay on the full server above.
 
@@ -90,6 +90,8 @@ The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `
 - When you need a tool and do not know which MCP server has it, call 7Maps find_tool first
   (or route) with the task in plain words, and use the server and tool it returns.
 - After calling a server 7Maps pointed you to, report it with report_road.
+- Add a server to the config only after the person approves it. Send a server address to
+  7Maps as scheme, host and path only: no query, and * for a path segment that looks like a key.
 - If 7Maps cannot answer, say so in one line and continue as usual.
 ```
 
@@ -134,7 +136,7 @@ Put a new server on the map at https://7it.co.il/7maps/submit/ (observed for 7 d
 What the plugin sends, and to whom:
 
 - **The MCP connection.** The plugin's `.mcp.json` connects your agent to `https://7it.co.il/7maps/mcp?via=claude-plugin&set=agent`. Each tool call sends that tool's arguments (a job in plain words, a server address or name, a tool name) to 7Maps. 7IT keeps a usage record per call (the tool, the client software, whether it worked, the time taken, the country derived from the network address, the server the call was about) for 90 days; the IP address is not stored. With the optional key set, the key is sent as the `X-7Maps-Key` header and the per-call counts described at https://7it.co.il/7maps/me/ are kept for it.
-- **The session-start hook** (`hooks/hooks.json`, `hooks/session-start.mjs`, `hooks/down-list.mjs`). It reads the MCP server addresses configured on your machine for the project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`), downloads the public list `https://7it.co.il/7maps/down.json` (at most every 10 minutes, kept in your temp folder), hashes the addresses on your machine and compares. No server address, name or setting is sent. 7IT counts the downloads, with no address. Off: `SEVENMAPS_HOOK=off`.
+- **The session-start hook** (`hooks/hooks.json`, `hooks/session-start.mjs`, `hooks/down-list.mjs`). It reads the MCP server addresses configured on your machine for the project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`), downloads the public list `https://7it.co.il/7maps/down.json` (at most every 10 minutes, kept in a cache folder of your own: `$XDG_CACHE_HOME/7maps` or `~/.cache/7maps`), hashes the addresses on your machine and compares. No server address, name or setting is sent. 7IT counts the downloads, with no address. Off: `SEVENMAPS_HOOK=off`.
 - **Payments.** Paid calls (x402) carry the payment your agent signs; 7IT keeps the paying wallet, the amount and the transaction id.
 - Nothing else: no telemetry, no analytics, no background requests.
 
@@ -174,7 +176,7 @@ At the start of each session the plugin downloads one public list of servers 7Ma
 it, on your machine, with the servers you have configured. It sends nothing about your servers.
 - It runs with Node.js (`node` on your PATH). Without Node the hook cannot run; the tools work as usual.
 - It never blocks a session; if the list cannot be downloaded, the session starts without it.
-- The list is kept for 10 minutes in your system's temporary folder (`7maps-down-v1.json`).
+- The list is kept for 10 minutes in a cache folder of your own (`$XDG_CACHE_HOME/7maps/down-v1.json` or `~/.cache/7maps/down-v1.json`, readable only by you). The hook ignores the file if it is a link or belongs to another user.
 - To turn the hook off, set `SEVENMAPS_HOOK=off` in your environment.
 
 **A server is reported down but works for you.**

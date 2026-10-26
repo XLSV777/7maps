@@ -50,6 +50,14 @@ test('cleanServer drops query, fragment and credentials', () => {
   assert.equal(cleanServer('npm:@scope/pkg'), 'npm:@scope/pkg');
 });
 
+test('cleanServer replaces token-like path segments with *', () => {
+  assert.equal(cleanServer('https://mcp.example.com/v1/a1b2c3d4e5f6g7h8i9j0k1/mcp'), 'https://mcp.example.com/v1/*/mcp');
+  assert.equal(cleanServer('https://mcp.example.com/sk_live/mcp'), 'https://mcp.example.com/*/mcp');
+  assert.equal(cleanServer('https://hooks.example.com/pk_abc/rk_x/ak_y'), 'https://hooks.example.com/*/*/*');
+  assert.equal(cleanServer('https://mcp.example.com/servers/github-issues-and-pulls/mcp'), 'https://mcp.example.com/servers/github-issues-and-pulls/mcp');
+  assert.equal(cleanServer('https://mcp.example.com/v2/mcp'), 'https://mcp.example.com/v2/mcp');
+});
+
 test('failReason maps errors', () => {
   assert.equal(failReason({ code: -32001, message: 'Request timed out' }), 'timeout');
   assert.equal(failReason({ code: 401, message: 'x' }), 'auth');

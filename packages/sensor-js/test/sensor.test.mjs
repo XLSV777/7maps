@@ -41,6 +41,12 @@ test('off unless switched on', () => {
 
 test('wire format keeps only the six fields and strips secrets from the address', () => {
   assert.equal(cleanServer('https://user:pw@mcp.example.com/mcp?api_key=SECRET#x'), 'https://mcp.example.com/mcp');
+  // Path segments that look like keys never leave the machine.
+  assert.equal(cleanServer('https://mcp.example.com/v1/a1b2c3d4e5f6g7h8i9j0k1/mcp'), 'https://mcp.example.com/v1/*/mcp');
+  assert.equal(cleanServer('https://mcp.example.com/sk_live/mcp'), 'https://mcp.example.com/*/mcp');
+  assert.equal(cleanServer('https://hooks.example.com/pk_abc/rk_x/ak_y'), 'https://hooks.example.com/*/*/*');
+  assert.equal(cleanServer('https://mcp.example.com/servers/github-issues-and-pulls/mcp'), 'https://mcp.example.com/servers/github-issues-and-pulls/mcp');
+  assert.equal(cleanServer('https://mcp.example.com/v2/mcp'), 'https://mcp.example.com/v2/mcp');
   const w = toWire({ server: 'https://mcp.example.com/mcp?token=abc', ok: false, fail: 'timeout', ms: 1234.6, tool: 'search', arguments: { q: 1 }, result: 'r', user: 'u' });
   assert.deepEqual(Object.keys(w).sort(), ['at', 'fail', 'ms', 'ok', 'server', 'tool']);
   assert.equal(w.ms, 1235);

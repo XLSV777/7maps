@@ -7,7 +7,7 @@
  * A problem on our side never blocks the user's work.
  */
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 export const DEFAULT_ENDPOINT = 'https://7it.co.il/7maps/mcp?via=guard';
 export const USER_AGENT = `7maps-guard/${VERSION} (+https://github.com/XLSV777/7maps)`;
 export const UNAVAILABLE = '7maps unavailable';
@@ -80,20 +80,35 @@ export class GuardError extends Error {
 // ------------------------------------------------------------------ helpers
 
 /**
+ * A path segment that looks like a key or token: 20 or more characters with both
+ * letters and digits, or one starting with sk_, pk_, rk_ or ak_.
+ */
+export function tokenLike(segment: string): boolean {
+  const s = String(segment || '');
+  return /^(?:sk|pk|rk|ak)_/i.test(s) || (s.length >= 20 && /[A-Za-z]/.test(s) && /[0-9]/.test(s));
+}
+
+/** The path with every token-like segment replaced by '*'. */
+export function maskPath(path: string): string {
+  return String(path || '').split('/').map((seg) => (tokenLike(seg) ? '*' : seg)).join('/');
+}
+
+/**
  * The address sent to 7Maps: scheme, host and path only. Query string, fragment
- * and user:password are removed, since they can carry keys.
+ * and user:password are removed, and path segments that look like keys become '*',
+ * since all of them can carry keys.
  */
 export function cleanServer(server: string): string {
   const s = String(server || '').trim();
   try {
     const u = new URL(s);
     if (u.protocol === 'http:' || u.protocol === 'https:') {
-      return `${u.protocol}//${u.host}${u.pathname}`.slice(0, 300);
+      return `${u.protocol}//${u.host}${maskPath(u.pathname)}`.slice(0, 300);
     }
   } catch {
     /* not a URL: a registry name or npm:/pypi: package */
   }
-  return s.split(/[?#]/)[0].slice(0, 300);
+  return maskPath(s.split(/[?#]/)[0]).slice(0, 300);
 }
 
 /** True when automatic reporting is switched on (opts value wins; else env SEVENMAPS_TELEMETRY=1). */

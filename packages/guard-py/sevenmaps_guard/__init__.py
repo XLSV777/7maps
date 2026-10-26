@@ -33,7 +33,7 @@ __all__ = [
     "clear_cache",
 ]
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 DEFAULT_ENDPOINT = "https://7it.co.il/7maps/mcp?via=guard"
 USER_AGENT = "7maps-guard/%s (+https://github.com/XLSV777/7maps)" % VERSION
 UNAVAILABLE = "7maps unavailable"
@@ -57,8 +57,22 @@ class _Unavailable(Exception):
 # ------------------------------------------------------------------ helpers
 
 
+def token_like(segment: str) -> bool:
+    """A path segment that looks like a key: 20+ characters with letters and digits, or an sk_/pk_/rk_/ak_ prefix."""
+    s = str(segment or "")
+    if re.match(r"(?i)(sk|pk|rk|ak)_", s):
+        return True
+    return len(s) >= 20 and re.search(r"[A-Za-z]", s) is not None and re.search(r"[0-9]", s) is not None
+
+
+def mask_path(path: str) -> str:
+    """The path with every token-like segment replaced by '*'."""
+    return "/".join("*" if token_like(seg) else seg for seg in str(path or "").split("/"))
+
+
 def clean_server(server: str) -> str:
-    """The address sent to 7Maps: scheme, host and path only (no query, fragment or user:password)."""
+    """The address sent to 7Maps: scheme, host and path only (no query, fragment or user:password,
+    and token-like path segments become '*')."""
     s = str(server or "").strip()
     try:
         u = urlsplit(s)
@@ -68,10 +82,10 @@ def clean_server(server: str) -> str:
                 host = "[%s]" % host
             if u.port:
                 host = "%s:%d" % (host, u.port)
-            return ("%s://%s%s" % (u.scheme, host, u.path or "/"))[:300]
+            return ("%s://%s%s" % (u.scheme, host, mask_path(u.path or "/")))[:300]
     except ValueError:
         pass
-    return re.split(r"[?#]", s)[0][:300]
+    return mask_path(re.split(r"[?#]", s)[0])[:300]
 
 
 def telemetry_enabled(explicit: Optional[bool] = None) -> bool:

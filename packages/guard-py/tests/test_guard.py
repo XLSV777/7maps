@@ -48,6 +48,13 @@ class Helpers(unittest.TestCase):
         self.assertEqual(g.clean_server("https://u:p@mcp.example.com/mcp?key=secret#x"), "https://mcp.example.com/mcp")
         self.assertEqual(g.clean_server("pypi:some-server"), "pypi:some-server")
 
+    def test_clean_server_masks_token_like_segments(self):
+        self.assertEqual(g.clean_server("https://mcp.example.com/v1/a1b2c3d4e5f6g7h8i9j0k1/mcp"), "https://mcp.example.com/v1/*/mcp")
+        self.assertEqual(g.clean_server("https://mcp.example.com/sk_live/mcp"), "https://mcp.example.com/*/mcp")
+        self.assertEqual(g.clean_server("https://hooks.example.com/pk_abc/rk_x/ak_y"), "https://hooks.example.com/*/*/*")
+        self.assertEqual(g.clean_server("https://mcp.example.com/servers/github-issues-and-pulls/mcp"), "https://mcp.example.com/servers/github-issues-and-pulls/mcp")
+        self.assertEqual(g.clean_server("https://mcp.example.com/v2/mcp"), "https://mcp.example.com/v2/mcp")
+
     def test_telemetry_opt_in(self):
         old = os.environ.pop("SEVENMAPS_TELEMETRY", None)
         try:

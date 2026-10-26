@@ -28,7 +28,7 @@ from urllib.parse import urlsplit
 __all__ = ["Reporter", "get_reporter", "sensor_enabled", "clean_server", "fail_reason", "sensor_id", "to_wire",
            "FAIL_REASONS", "DEFAULT_ENDPOINT", "VERSION"]
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 DEFAULT_ENDPOINT = "https://7it.co.il/7maps/sensor"
 FAIL_REASONS = ("unreachable", "auth", "args", "server_error", "timeout", "rate_limited", "wrong_result")
 _TOOL = re.compile(r"^[A-Za-z0-9_.:/-]{1,128}$")
@@ -44,8 +44,21 @@ def sensor_enabled(explicit: Optional[bool] = None) -> bool:
     return explicit is True or env == "1"
 
 
+def token_like(segment: Any) -> bool:
+    """A path segment that looks like a key: 20+ characters with letters and digits, or an sk_/pk_/rk_/ak_ prefix."""
+    s = str(segment or "")
+    if re.match(r"(?i)(sk|pk|rk|ak)_", s):
+        return True
+    return len(s) >= 20 and re.search(r"[A-Za-z]", s) is not None and re.search(r"[0-9]", s) is not None
+
+
+def mask_path(path: Any) -> str:
+    """The path with every token-like segment replaced by '*'."""
+    return "/".join("*" if token_like(seg) else seg for seg in str(path or "").split("/"))
+
+
 def clean_server(server: Any) -> str:
-    """Scheme, host and path only: query strings, fragments and user:password can carry keys."""
+    """Scheme, host and path only: query strings, fragments, user:password and token-like path segments can carry keys."""
     s = str(server or "").strip()
     try:
         u = urlsplit(s)
@@ -55,10 +68,10 @@ def clean_server(server: Any) -> str:
                 host = "[%s]" % host
             if u.port:
                 host = "%s:%d" % (host, u.port)
-            return ("%s://%s%s" % (u.scheme, host, u.path))[:300]
+            return ("%s://%s%s" % (u.scheme, host, mask_path(u.path)))[:300]
     except ValueError:
         pass
-    return re.split(r"[?#\s]", s)[0][:300]
+    return mask_path(re.split(r"[?#\s]", s)[0])[:300]
 
 
 def fail_reason(err: BaseException) -> str:

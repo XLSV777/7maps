@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sevenmaps-sensor"
-version = "0.1.0"
+version = "0.1.1"
 description = "Opt-in sensor for MCP gateways and clients: reports per-call outcomes (server, ok, fail reason, ms, tool name) to 7Maps. Never arguments or results."
 readme = "README.md"
 requires-python = ">=3.9"

@@ -73,7 +73,7 @@ Exit code `0` for allow, `2` for deny, `1` for a usage error. Useful as a CI ste
 
 Every request goes to `https://7it.co.il/7maps/mcp?via=guard` as an MCP `tools/call` over HTTPS, with the header `user-agent: 7maps-guard/<version> (+https://github.com/XLSV777/7maps)`. Like any HTTPS request, it also carries your IP address. No cookies, no account, no device ID.
 
-The server address is reduced to scheme, host and path before it is sent: the query string, the fragment and any `user:password@` part are removed, since they can carry keys.
+The server address is reduced to scheme, host and path before it is sent: the query string, the fragment and any `user:password@` part are removed, since they can carry keys. Path segments that look like keys or tokens (20 or more characters with both letters and digits, or starting with `sk_`, `pk_`, `rk_` or `ak_`) are replaced by `*`. Even so, keep secrets out of server paths: put them in a header.
 
 | Call | When | Fields |
 | --- | --- | --- |

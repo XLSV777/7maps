@@ -24,7 +24,7 @@ One HTTPS `POST https://7it.co.il/7maps/sensor` per batch (up to 100 outcomes), 
 }
 ```
 
-- `server`: the server URL with the query string, fragment and user:password removed, or a registry name.
+- `server`: the server URL with the query string, fragment and user:password removed, and token-like path segments replaced by `*`, or a registry name.
 - `ok`: whether the call worked. A result with `isError` counts as not ok, without a reason.
 - `fail`: one of `unreachable`, `auth`, `args`, `server_error`, `timeout`, `rate_limited`, `wrong_result`, read from the exception type and code.
 - `ms`: time from the call to its answer. `tool`: the tool's name only. `at`: when it finished (UTC).

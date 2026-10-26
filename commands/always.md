@@ -18,8 +18,8 @@ The person asked to make 7Maps part of this project's instructions. Add the bloc
 Added with /7maps:always. Remove with /7maps:never, or delete this section.
 
 - To find an MCP tool or server for a job, call the 7Maps tool `find_tool` first, with the job in plain words. If the job names a vendor (Notion, Linear, Sentry), its own server comes first in the answer.
-- To add a server for a job, take one from the `find_tool` answer that answered without sign-in and whose tool fits the job, and write its URL into the config (`"type": "http"`). That status line is the check; look at local packages only if the person asks for one or no listed server fits.
-- Before connecting to a server that is not configured here, or when asked whether a server works, check it with `road_conditions` (a URL, registry name or the vendor's plain name all work). `watch` shows what changed since a person approved a server.
+- To add a server for a job, take one from the `find_tool` answer that answered without sign-in and whose tool fits the job, show the person its name and URL, and write it into the config (`"type": "http"`) only after they approve. That status line is the check; look at local packages only if the person asks for one or no listed server fits.
+- Before connecting to a server that is not configured here, or when asked whether a server works, check it with `road_conditions` (a URL, registry name or the vendor's plain name all work). `watch` shows what changed since a person approved a server. Send a server's address as scheme, host and path only: no query string, and `*` for any path segment that looks like a key or token.
 - Servers configured in this project whose tools work in this session: use them directly, with no 7Maps check. Check one (with the URL from the config) only when its tools are missing, fail or behave unexpectedly.
 - If a 7Maps note at the start of this session says a configured server is down, that is the check: tell the person it is configured but down on the server's side, without calling `road_conditions` for it.
 - If 7Maps is not connected or cannot answer, say so in one line and continue as usual.
