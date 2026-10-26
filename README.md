@@ -140,6 +140,55 @@ What the plugin sends, and to whom:
 
 Privacy policy: https://7it.co.il/privacy/#7maps
 
+## Troubleshooting
+
+**The 7Maps tools do not show up in Claude Code.**
+Run `/plugin` and check that `7maps@7maps` is installed and enabled. Then start a new session: tools load when a
+session starts. If you added only the server, `claude mcp list` should show `7maps` as connected. Behind a company
+proxy or firewall, the address `https://7it.co.il/7maps/mcp` must be reachable.
+
+**"... calls without charge for route and road_conditions are used ..."**
+`route` and `road_conditions` include 20 calls a day per agent without charge, from a shared daily allowance. The
+answer says which one was used up (this agent's calls, or the shared allowance of all agents) and that they come back
+at 00:00 UTC. `find_tool` keeps working without charge in the meantime, and your agent continues the task as usual.
+Nothing is charged unless your agent pays per call itself, or you use a 7IT Guard Pro key (below).
+
+**"Too many requests. Fair-use limits apply."**
+The client sent many requests in a short time. Wait a few minutes and try again. Normal use by one person never
+reaches this.
+
+**The optional key.**
+- Claude Code asks for "7Maps key (optional)" when the plugin is enabled. Leaving it empty is fine; everything works
+  the same.
+- Claude Code keeps the key in your system's credential store, not in a settings file. To set it after skipping the
+  question, reinstall the plugin (`/plugin uninstall 7maps@7maps`, then `/plugin install 7maps@7maps`).
+- The key is sent as the `X-7Maps-Key` header. In Cursor, Gemini CLI, VS Code and other clients, add that header to
+  the 7Maps server entry yourself (see "Personal key (optional)" above).
+- Ask your agent to call `my_7maps_usage`: with a key that was rotated or deleted it says "That 7Maps key is not
+  recognized". A key that is not recognized behaves like no key.
+- A lost personal key cannot be shown again: create a new one at https://7it.co.il/7maps/me.
+- A 7IT Guard Pro key goes in the same setting; the paid 7Maps tools then run on your plan.
+
+**The session hook.**
+At the start of each session the plugin downloads one public list of servers 7Maps saw not answering and compares
+it, on your machine, with the servers you have configured. It sends nothing about your servers.
+- It runs with Node.js (`node` on your PATH). Without Node the hook cannot run; the tools work as usual.
+- It never blocks a session; if the list cannot be downloaded, the session starts without it.
+- The list is kept for 10 minutes in your system's temporary folder (`7maps-down-v1.json`).
+- To turn the hook off, set `SEVENMAPS_HOOK=off` in your environment.
+
+**A server is reported down but works for you.**
+7Maps reports what its own checks saw at the time shown in the answer. If the server works now, the next check
+updates it. Server owners can claim their server for checks every 5 minutes (`claim_mcp_server`).
+
+**Remove the plugin.**
+See "Uninstall" below. Removing the plugin does not delete a personal key; use "Delete my data" at
+https://7it.co.il/7maps/me.
+
+**Still stuck?**
+Open an issue on GitHub with your client and its version, the plugin version (`/plugin`), the tool you called and
+the answer you got. Leave out keys and anything private.
+
 ## Uninstall
 
 ```
