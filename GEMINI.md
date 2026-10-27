@@ -4,10 +4,10 @@
 
 1. Looking for a tool that does a job: call `find_tool` with the job in plain words (no charge).
 2. Choosing a server for a task: call `route` with the task in plain words. Use the returned server and tool; keep the alternatives as fallbacks and skip the servers listed under avoid.
-3. Before connecting to a server that is not configured yet: call `road_conditions` with its URL or registry name. If the status is down or a sign-in is needed that you do not have, do not connect. Servers already configured whose tools work: use them directly; check one only when its tools are missing or fail. Add a server to the settings only after the person approves it. Send a server address as scheme, host and path only: no query string, and `*` for any path segment that looks like a key or token.
+3. Before connecting to a server that is not configured yet: call `road_conditions` with its URL or registry name. If the status is down or a sign-in is needed that you do not have, do not connect. Servers already configured whose tools work: use them directly; check one only when its tools are missing or fail. Add a server to the settings only after the person approves it. Send a server address (also in a `last_trip`) as scheme, host and path only: no query string, and `*` for any path segment that looks like a key or token.
 4. When a person approved a server earlier and its tools look different, or they ask what changed: call `watch` with the approval date. If a tool became riskier or the payee changed, ask the person again before calling it.
 5. Need one tool only: call `tool_card` instead of loading the whole tool list.
-6. After the call, pass `last_trip` on your next 7Maps call (or call `report_road`, no charge) with whether it worked. It keeps the map accurate.
+6. After the call: the 7Maps answer ends with a ready `last_trip` (server and tool filled in). Fill in `ok` and `ms` and add it to your next 7Maps call, whichever tool that is, or send the same fields with `report_road` (no charge). Fixed fields only, never the person's data. It keeps the map accurate.
 
 If the person you work for owns an MCP server: `claim_mcp_server` verifies ownership and sets alerts, and `my_server_report` shows how often agents looked for servers like theirs (both no charge).
 

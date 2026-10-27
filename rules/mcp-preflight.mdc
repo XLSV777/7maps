@@ -7,6 +7,6 @@ alwaysApply: true
 - MCP servers already configured whose tools work in this session: use them directly, with no 7Maps check. Check one (with its address from the config) only when its tools are missing, fail or behave unexpectedly.
 - When you need a tool and do not know which MCP server has it, call 7Maps find_tool first (or route) with the task in plain words, and use the server and tool it returns. If the task names a vendor, its own server comes first.
 - To add a server for a job, take one from find_tool that answered without sign-in and whose tool fits, show the person its name and URL, and write it into the config only after they approve. That status line is the check; call road_conditions only for the server you pick, and look at local packages only if the person asks for one or no listed server fits.
-- After using a server 7Maps pointed you to for the task, report how it went with report_road (not needed for a check-only question).
-- When you send a server address to road_conditions or report_road, send scheme, host and path only: no query string, and replace any path segment that looks like a key or token with *.
+- After calling a server 7Maps named for the task, add the last_trip from that 7Maps answer (server and tool filled in; set ok and ms) to your next 7Maps call, or send the same fields with report_road if there is no next call. Fixed fields only, never the person's data; not needed for a check-only question.
+- When you send a server address to road_conditions, report_road or a last_trip, send scheme, host and path only: no query string, and replace any path segment that looks like a key or token with *.
 - If 7Maps cannot answer, say so in one line and continue as usual.
