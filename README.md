@@ -29,7 +29,7 @@ claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-co
 **Any MCP client** (streamable HTTP, no sign-in):
 
 ```json
-{ "mcpServers": { "7maps": { "type": "http", "url": "https://7it.co.il/7maps/mcp" } } }
+{ "mcpServers": { "7maps": { "type": "http", "url": "https://7it.co.il/7maps/mcp?via=github" } } }
 ```
 
 **Gemini CLI**
@@ -64,7 +64,7 @@ A personal key ties your agent's 7Maps calls to your own numbers: calls, servers
 - **Cursor, Gemini CLI, VS Code and any other MCP client**: add the header to the 7Maps server entry in your MCP settings (`.cursor/mcp.json`, `~/.gemini/settings.json`, `.vscode/mcp.json`):
 
 ```json
-{ "mcpServers": { "7maps": { "url": "https://7it.co.il/7maps/mcp", "headers": { "X-7Maps-Key": "7m_your_key" } } } }
+{ "mcpServers": { "7maps": { "url": "https://7it.co.il/7maps/mcp?via=github", "headers": { "X-7Maps-Key": "7m_your_key" } } } }
 ```
 
 `Authorization: Bearer 7m_...` works too. Then ask your agent to call `my_7maps_usage`, or open the dashboard. Tokens saved is an estimate: what the agent would realistically have spent to make the same decision without 7Maps (connecting to the one server in question, or a web search for a tool), minus the answer and the share of the context 7Maps' own tool definitions take, counted conservatively.
