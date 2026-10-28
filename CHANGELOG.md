@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.5.3 (2026-10-28)
 
 - Gemini CLI: the MCP server in gemini-extension.json uses `url` with `type: "http"` instead of the deprecated `httpUrl` (same address, same transport).
 
