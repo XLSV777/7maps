@@ -125,9 +125,13 @@ test('every fixed 7Maps address names this plugin version (pv), so the server ca
   const urls = [
     JSON.parse(fs.readFileSync(path.join(root, '.mcp.json'), 'utf8')).mcpServers['7maps'].url,
     JSON.parse(fs.readFileSync(path.join(root, 'mcp.json'), 'utf8')).mcpServers['7maps'].url,
-    JSON.parse(fs.readFileSync(path.join(root, 'gemini-extension.json'), 'utf8')).mcpServers['7maps'].httpUrl,
+    JSON.parse(fs.readFileSync(path.join(root, 'gemini-extension.json'), 'utf8')).mcpServers['7maps'].url,
   ];
   for (const u of urls) assert.equal(new URL(u).searchParams.get('pv'), version, u);
+  // Gemini CLI: url + type http (httpUrl is deprecated in gemini-cli packages/core/src/config/config.ts).
+  const gem = JSON.parse(fs.readFileSync(path.join(root, 'gemini-extension.json'), 'utf8')).mcpServers['7maps'];
+  assert.equal(gem.type, 'http');
+  assert.equal(gem.httpUrl, undefined);
   assert.equal(JSON.parse(fs.readFileSync(path.join(root, 'gemini-extension.json'), 'utf8')).version, version);
   assert.equal(JSON.parse(fs.readFileSync(path.join(root, '.cursor-plugin', 'plugin.json'), 'utf8')).version, version);
 });
