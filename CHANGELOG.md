@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.5.4 (2026-10-29)
 
 - Listing icon (`.claude-plugin/icon.png`, the 7Maps mark).
 
