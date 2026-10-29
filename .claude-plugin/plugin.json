@@ -20,6 +20,7 @@
   "privacyPolicyUrl": "https://7it.co.il/privacy/#7maps",
   "termsOfServiceUrl": "https://7it.co.il/terms/#7maps",
   "documentationUrl": "https://7it.co.il/7maps/plugin/",
+  "icon": ".claude-plugin/icon.png",
   "supportUrl": "https://github.com/XLSV777/7maps/issues",
   "userConfig": {
     "maps_key": {
