@@ -23,7 +23,7 @@
     },
     "./package.json": "./package.json"
   },
-  "bin": { "7maps-guard": "./dist/cli.js" },
+  "bin": { "7maps-guard": "dist/cli.js" },
   "files": ["dist", "README.md", "LICENSE"],
   "sideEffects": false,
   "scripts": {
