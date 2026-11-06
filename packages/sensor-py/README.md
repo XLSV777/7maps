@@ -42,10 +42,10 @@ Off by default. Either set an environment variable:
 SEVENMAPS_SENSOR=1
 ```
 
-or pass `enabled=True` in code. Install from GitHub (no PyPI release yet):
+or pass `enabled=True` in code. Install from PyPI:
 
 ```
-pip install "git+https://github.com/XLSV777/7maps#subdirectory=packages/sensor-py"
+pip install sevenmaps-sensor
 ```
 
 ### With the MCP Python SDK
