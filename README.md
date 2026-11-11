@@ -11,7 +11,7 @@ A live map of public MCP servers for AI agents (a map of software, not geography
 - `road_conditions`: a server's status, speed, tool risk levels, last change and agents' rating, before connecting.
 - `watch`, `verify_lock`, `changes_since`: did a server a person approved change, or get riskier.
 - `tool_card`, `preflight`: one tool's schema, and whether a call's arguments will pass.
-- For server owners: `submit_mcp_server`, `claim_mcp_server` (ownership, alerts, a badge) and `my_server_report` (what agents looked for), no charge, on the full server (https://7it.co.il/7maps/mcp).
+- For server owners: `claim_mcp_server` (ownership, alerts, a badge), also in the plugin (`/7maps:verify`); `submit_mcp_server` and `my_server_report` (what agents looked for) on the full server (https://7it.co.il/7maps/mcp). No charge.
 - `my_7maps_usage`: what 7Maps did for you, when your connection carries a personal key (see below), no charge.
 
 The first 20 `route` and `road_conditions` calls a day are not charged; after that, paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. How the map is made: https://7it.co.il/7maps/methodology/?ref=github. More: https://7it.co.il/7maps/?ref=github
@@ -85,7 +85,7 @@ claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-co
 gemini extensions install https://github.com/XLSV777/7maps
 ```
 
-**Claude Code plugin** (the server's agent set, an `mcp-preflight` skill, a session-start line when one of your configured servers is down, and the `/7maps:always` and `/7maps:never` commands). It works with nothing to set up.
+**Claude Code plugin** (the server's agent set, an `mcp-preflight` skill, a session-start line when one of your configured servers is down, and the `/7maps:always`, `/7maps:never` and `/7maps:verify` commands). It works with nothing to set up.
 
 1. Install:
 
@@ -100,7 +100,7 @@ gemini extensions install https://github.com/XLSV777/7maps
 
 **Servers already in your project.** At the start of each session (Claude Code, and Gemini CLI with the extension) the plugin's hook reads the MCP servers configured on your machine for this project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`). It downloads one public file, `https://7it.co.il/7maps/down.json`: the servers 7Maps saw not answering at their latest check, as short hashes. It keeps that file for 10 minutes in a cache folder of your own (`~/.cache/7maps`), so most sessions make no request at all. It then hashes your servers' addresses on your machine and compares. **No server address, name or setting leaves your machine**: the only request is a plain download of that list, tagged with the client (`?via=claude-hook` or `?via=gemini-hook`). If a configured server is on the list, the agent gets one line saying so, and tells you "configured but down on the server's side" instead of "not configured" or a long investigation; if the server's tools are present anyway, the line tells the agent to ignore it. It adds nothing when none of your servers is on the list, and never blocks a session. Turn it off with the environment variable `SEVENMAPS_HOOK=off`. The hook needs `node` on your PATH; without it, it does nothing. The hashing is described in the list itself (`key`), so you can check it.
 
-The plugin connects to `https://7it.co.il/7maps/mcp?set=agent`: only the tools an agent uses in a session (`find_tool`, `route`, `road_conditions`, `watch`, `tool_card`, `preflight`, `report_road`, `my_7maps_usage`), with short descriptions, so its tool definitions take about 2,600 tokens of context instead of about 11,600. Any 7Maps tool also takes `last_trip`: how the agent's previous call to a server went, in fixed fields. Servers can be named by URL, registry name or the vendor's plain name ("notion"). The owner tools stay on the full server above.
+The plugin connects to `https://7it.co.il/7maps/mcp?set=agent`: only the tools an agent uses in a session (`find_tool`, `route`, `road_conditions`, `watch`, `tool_card`, `preflight`, `report_road`, `my_7maps_usage`, `claim_mcp_server`: nine tools), with short descriptions, so its tool definitions take about 2,900 tokens of context, estimated, instead of about 11,600. The October 2026 measurement at the top of this page was made on the earlier set of eight tools, without `claim_mcp_server`. Any 7Maps tool also takes `last_trip`: how the agent's previous call to a server went, in fixed fields. Servers can be named by URL, registry name or the vendor's plain name ("notion"). The other owner tools stay on the full server above.
 
 ## Personal key (optional)
 
@@ -126,6 +126,8 @@ A personal key ties your agent's 7Maps calls to your own numbers: calls, servers
 - `/7maps:never` removes that section again, and nothing else.
 
 The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `<!-- 7maps:end -->`, so you can also read, edit or delete it by hand. Nothing changes until you run `/7maps:always`.
+
+**Verify your own MCP server**: `/7maps:verify` (with the server address, or Claude asks for it) walks through `claim_mcp_server`: one line in a file on the server's host, then a second call. It runs only when you type it. The same steps work in a browser at https://7it.co.il/7maps/claim/, which also says what verifying commits you to.
 
 **Any agent**: paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
 

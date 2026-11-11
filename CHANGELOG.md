@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- `/7maps:verify`: verify an MCP server you own or run, with `claim_mcp_server` (now in the plugin's tool set on the 7Maps side). Runs only when typed.
+- The `mcp-preflight` skill names `claim_mcp_server` for an owner who asks to verify their server.
+
 ## 1.5.4 (2026-10-29)
 
 - Listing icon (`.claude-plugin/icon.png`, the 7Maps mark).
