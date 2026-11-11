@@ -14,7 +14,54 @@ A live map of public MCP servers for AI agents (a map of software, not geography
 - For server owners: `submit_mcp_server`, `claim_mcp_server` (ownership, alerts, a badge) and `my_server_report` (what agents looked for), no charge, on the full server (https://7it.co.il/7maps/mcp).
 - `my_7maps_usage`: what 7Maps did for you, when your connection carries a personal key (see below), no charge.
 
-The first 20 `route` and `road_conditions` calls a day are not charged; after that, paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. How the map is made: https://7it.co.il/7maps/methodology/. More: https://7it.co.il/7maps/
+The first 20 `route` and `road_conditions` calls a day are not charged; after that, paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. How the map is made: https://7it.co.il/7maps/methodology/?ref=github. More: https://7it.co.il/7maps/?ref=github
+
+## Try it in 60 seconds
+
+No sign-in and no key. 7Maps is a plain MCP server over streamable HTTP, so `curl` is enough to see what it answers (bash, macOS or Linux; one request each, no session needed).
+
+**1. See the tools**
+
+```
+curl -s "https://7it.co.il/7maps/mcp?via=github" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
+**2. Ask for a tool by the job it should do** (`find_tool`, no charge)
+
+```
+curl -s "https://7it.co.il/7maps/mcp?via=github" \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"find_tool","arguments":{"job":"send a transactional email","may":"change","limit":3}}}'
+```
+
+The answer has a short text for the agent and the same results as JSON in `result.structuredContent`. One of the three results, trimmed (a real answer from November 2026; the map is re-checked every day, so yours will differ):
+
+```json
+{
+  "tool": "send_transactional_email",
+  "server": "io.github.wilmendezofficial/postari",
+  "does": "changes data",
+  "status": "ok",
+  "checked_at": "2026-11-10T13:00:00Z",
+  "handshake_ms": 920,
+  "tool_list_tokens": 7300,
+  "url_page": "https://7it.co.il/7maps/s/postari.io/api/mcp"
+}
+```
+
+- `does`: an automated estimate of what the tool can do (read-only, changes data, high risk), from its public description and annotations.
+- `status`: whether the server answered `initialize` and `tools/list` at `checked_at` (`ok` = answering).
+- `handshake_ms`: how long that handshake took.
+- `tool_list_tokens`: about how much context the server's whole tool list costs your agent once it is connected.
+- `url_page`: the server's page on the map (uptime, every tool's risk level, what changed).
+
+`may` takes `read`, `change` or `any`; `answering_now` (default `true`) keeps only servers that answered at the last check.
+
+**3. Give it to your agent.** Add the server with one of the lines under "Use it" below, then ask your agent for a tool by its job, for example "find an MCP server that can send a transactional email".
+
+**Why before you wire a server.** Adding an MCP server costs setup, sign-in and context. `find_tool` tells you first which servers have the tool, whether they are answering, how fast, how risky the tool is and what its tool list costs to load, so you pick one that works instead of debugging one that is down. Results come only from 7Maps' own checks and real use; placement cannot be bought.
 
 ## Use it
 
@@ -132,7 +179,9 @@ Docs: https://7it.co.il/tools/guard/
 
 ## Own an MCP server?
 
-Put a new server on the map at https://7it.co.il/7maps/submit/ (observed for 7 days first; placement cannot be bought), or see how the crawler works and opt out at https://7it.co.il/7maps/bot/.
+**Verify it, at no cost:** paste its address at https://7it.co.il/7maps/claim/?ref=github, put the one line you get in `/.well-known/7maps-verify.txt` on your host (or in a DNS record), and press check. Your server's page gets the owner mark and a note in your words, checks every five minutes (up to three servers per owner), down and up alerts (ntfy, Slack, Discord or any webhook) and a badge. An AI agent can do the same with the `claim_mcp_server` tool on https://7it.co.il/7maps/mcp. More for owners: https://7it.co.il/7maps/owners/?ref=github
+
+Put a new server on the map at https://7it.co.il/7maps/submit/?ref=github (observed for 7 days first; placement cannot be bought), or see how the crawler works and opt out at https://7it.co.il/7maps/bot/.
 
 ## Privacy
 
