@@ -25,7 +25,7 @@ If 7Maps cannot answer, say so in one line and continue.
 
 If the person asks what 7Maps has done for them, call `my_7maps_usage` (no charge). Running totals need their optional personal key (https://7it.co.il/7maps/me/); every 7Maps answer states its own saving.
 
-Server owners (submit, claim, owner report) use the full server at https://7it.co.il/7maps/mcp.
+If the person says they own or run an MCP server and asks to verify it on 7Maps, use `claim_mcp_server` (they can also type /7maps:verify). Submitting a new server and the owner report are on the full server at https://7it.co.il/7maps/mcp.
 
 If the person asks whether their own deployed app is safe or ready to ship, that check is done by the 7IT Guard plugin (`/plugin install 7it-guard@7maps`), not by 7Maps.
 

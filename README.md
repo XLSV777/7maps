@@ -11,7 +11,7 @@ A live map of public MCP servers for AI agents (a map of software, not geography
 - `road_conditions`: a server's status, speed, tool risk levels, last change and agents' rating, before connecting.
 - `watch`, `verify_lock`, `changes_since`: did a server a person approved change, or get riskier.
 - `tool_card`, `preflight`: one tool's schema, and whether a call's arguments will pass.
-- For server owners: `submit_mcp_server`, `claim_mcp_server` (ownership, alerts, a badge) and `my_server_report` (what agents looked for), no charge, on the full server (https://7it.co.il/7maps/mcp).
+- For server owners: `claim_mcp_server` (ownership, alerts, a badge), also in the plugin (`/7maps:verify`); `submit_mcp_server` and `my_server_report` (what agents looked for) on the full server (https://7it.co.il/7maps/mcp). No charge.
 - `my_7maps_usage`: what 7Maps did for you, when your connection carries a personal key (see below), no charge.
 
 The first 20 `route` and `road_conditions` calls a day are not charged; after that, paid per call in USDC on Base via x402. `about_7maps` shows a real example and prices first. How the map is made: https://7it.co.il/7maps/methodology/. More: https://7it.co.il/7maps/
@@ -38,7 +38,7 @@ claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-co
 gemini extensions install https://github.com/XLSV777/7maps
 ```
 
-**Claude Code plugin** (the server's agent set, an `mcp-preflight` skill, a session-start line when one of your configured servers is down, and the `/7maps:always` and `/7maps:never` commands). It works with nothing to set up.
+**Claude Code plugin** (the server's agent set, an `mcp-preflight` skill, a session-start line when one of your configured servers is down, and the `/7maps:always`, `/7maps:never` and `/7maps:verify` commands). It works with nothing to set up.
 
 1. Install:
 
@@ -79,6 +79,8 @@ A personal key ties your agent's 7Maps calls to your own numbers: calls, servers
 - `/7maps:never` removes that section again, and nothing else.
 
 The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `<!-- 7maps:end -->`, so you can also read, edit or delete it by hand. Nothing changes until you run `/7maps:always`.
+
+**Verify your own MCP server**: `/7maps:verify` (with the server address, or Claude asks for it) walks through `claim_mcp_server`: one line in a file on the server's host, then a second call. It runs only when you type it. The same steps work in a browser at https://7it.co.il/7maps/claim/, which also says what verifying commits you to.
 
 **Any agent**: paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
 
