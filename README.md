@@ -85,7 +85,7 @@ claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-co
 gemini extensions install https://github.com/XLSV777/7maps
 ```
 
-**Claude Code plugin** (the server's agent set, an `mcp-preflight` skill, a session-start line when one of your configured servers is down, and the `/7maps:always` and `/7maps:never` commands). It works with nothing to set up.
+**Claude Code plugin** (the server's agent set, an `mcp-preflight` skill, a session-start line when one of your configured servers is down, a lookup on 7Maps before Claude adds a new MCP server, and the `/7maps:always` and `/7maps:never` commands). It works with nothing to set up.
 
 1. Install:
 
@@ -94,11 +94,13 @@ gemini extensions install https://github.com/XLSV777/7maps
 /plugin install 7maps@7maps
 ```
 
-2. Recommended, once per project: `/7maps:always`. For best results: fewer tokens, and the agent goes to 7Maps directly. `/7maps:never` removes it.
+2. Recommended, once per project: `/7maps:always`. For best results: fewer tokens, and the agent goes to 7Maps directly. `/7maps:never` removes it and turns the before-connect lookup off.
 
 3. Turn on updates: in `/plugin`, open Marketplaces, choose `7maps`, Enable auto-update. Plugins added from GitHub do not update by themselves until you do. To update by hand: `/plugin marketplace update 7maps` (or `claude plugin update 7maps@7maps` from a terminal). When a newer version is out, the session hook adds one line saying so (from the same down list it already downloads, so no extra request), at most once per session.
 
 **Servers already in your project.** At the start of each session (Claude Code, and Gemini CLI with the extension) the plugin's hook reads the MCP servers configured on your machine for this project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`). It downloads one public file, `https://7it.co.il/7maps/down.json`: the servers 7Maps saw not answering at their latest check, as short hashes. It keeps that file for 10 minutes in a cache folder of your own (`~/.cache/7maps`), so most sessions make no request at all. It then hashes your servers' addresses on your machine and compares. **No server address, name or setting leaves your machine**: the only request is a plain download of that list, tagged with the client (`?via=claude-hook` or `?via=gemini-hook`). If a configured server is on the list, the agent gets one line saying so, and tells you "configured but down on the server's side" instead of "not configured" or a long investigation; if the server's tools are present anyway, the line tells the agent to ignore it. It adds nothing when none of your servers is on the list, and never blocks a session. Turn it off with the environment variable `SEVENMAPS_HOOK=off`. The hook needs `node` on your PATH; without it, it does nothing. The hashing is described in the list itself (`key`), so you can check it.
+
+**Before Claude adds a new MCP server (on by default, Claude Code).** When Claude is about to add an MCP server, with a `claude mcp add ... <url>` command or by writing an MCP config file (`.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `~/.claude.json`), a second hook (`hooks/before-connect.json`, `hooks/before-connect.mjs`) looks up that server's address on 7Maps with `road_conditions` and adds 7Maps' record of it to Claude's context: whether it answered at its last check and when, sign-in, tool risk counts, the last tool change, and its 7Maps page. It informs only: it never blocks, denies or changes the tool call, and it adds nothing when 7Maps has no record or cannot answer. **What is sent: the server address only**, as scheme, host and path (no query string, and `*` for any path segment that looks like a key or token); never the command, the file, the project, your prompts or the conversation. Servers already configured, local addresses (`localhost`, private networks) and 7Maps itself are skipped, at most three servers per tool call, and each answer is kept for 10 minutes in your cache folder (`~/.cache/7maps/lookup-v1.json`). The first time it runs, Claude Code shows you one line saying so. **Turn it off with `/7maps:never`** (a setting of your own in `~/.config/7maps/settings.json`, for all projects on this machine); `/7maps:always` turns it back on. `SEVENMAPS_BEFORE_CONNECT=off` (or `SEVENMAPS_HOOK=off`, which turns off both hooks) works too.
 
 The plugin connects to `https://7it.co.il/7maps/mcp?set=agent`: only the tools an agent uses in a session (`find_tool`, `route`, `road_conditions`, `watch`, `tool_card`, `preflight`, `report_road`, `my_7maps_usage`), with short descriptions, so its tool definitions take about 2,600 tokens of context instead of about 11,600. Any 7Maps tool also takes `last_trip`: how the agent's previous call to a server went, in fixed fields. Servers can be named by URL, registry name or the vendor's plain name ("notion"). The owner tools stay on the full server above.
 
@@ -120,12 +122,12 @@ A personal key ties your agent's 7Maps calls to your own numbers: calls, servers
 
 ## Make it a habit for your agent
 
-**Claude Code plugin**: two optional commands.
+**Claude Code plugin**: the before-connect lookup above is on by default, and two optional commands.
 
-- `/7maps:always` (recommended, once per project) adds a short, marked section to this project's `CLAUDE.md` (it creates the file if there is none) asking Claude to use `find_tool` to find MCP tools and to add a server that answered, to check a server on 7Maps before connecting to a new one, and to check a configured server only when it fails (servers that work are used directly). Claude shows you the exact text and asks before writing. If the project has an `AGENTS.md` and no `CLAUDE.md`, the new file starts with `@AGENTS.md` so Claude Code keeps reading it.
-- `/7maps:never` removes that section again, and nothing else.
+- `/7maps:always` (recommended, once per project) turns the before-connect lookup on (it already is, unless you turned it off) and adds a short, marked section to this project's `CLAUDE.md` (it creates the file if there is none) asking Claude to use `find_tool` to find MCP tools and to add a server that answered, to check a server on 7Maps before connecting to a new one, and to check a configured server only when it fails (servers that work are used directly). Claude shows you the exact text and asks before writing. If the project has an `AGENTS.md` and no `CLAUDE.md`, the new file starts with `@AGENTS.md` so Claude Code keeps reading it.
+- `/7maps:never` turns the before-connect lookup off on this machine and removes that section again, and nothing else.
 
-The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `<!-- 7maps:end -->`, so you can also read, edit or delete it by hand. Nothing changes until you run `/7maps:always`.
+The section is plain text between two marker lines, `<!-- 7maps:begin -->` and `<!-- 7maps:end -->`, so you can also read, edit or delete it by hand. The section is not added until you run `/7maps:always`.
 
 **Any agent**: paste into `CLAUDE.md`, `AGENTS.md` or `.cursor/rules`:
 
@@ -189,6 +191,7 @@ What the plugin sends, and to whom:
 
 - **The MCP connection.** The plugin's `.mcp.json` connects your agent to `https://7it.co.il/7maps/mcp?via=claude-plugin&set=agent&pv=<plugin version>` (the version only lets 7Maps say once when a newer plugin is out). Each tool call sends that tool's arguments (a job in plain words, a server address or name, a tool name) to 7Maps. 7IT keeps a usage record per call (the tool, the client software, whether it worked, the time taken, the country derived from the network address, the server the call was about) for 90 days; the IP address is not stored. With the optional key set, the key is sent as the `X-7Maps-Key` header and the per-call counts described at https://7it.co.il/7maps/me/ are kept for it.
 - **The session-start hook** (`hooks/hooks.json`, `hooks/session-start.mjs`, `hooks/down-list.mjs`). It reads the MCP server addresses configured on your machine for the project (Claude Code: `.mcp.json` and `~/.claude.json`; Gemini CLI: `.gemini/settings.json` and `~/.gemini/settings.json`), downloads the public list `https://7it.co.il/7maps/down.json` (at most every 10 minutes, kept in a cache folder of your own: `$XDG_CACHE_HOME/7maps` or `~/.cache/7maps`), hashes the addresses on your machine and compares. No server address, name or setting is sent. 7IT counts the downloads, with no address. Off: `SEVENMAPS_HOOK=off`.
+- **The before-connect hook** (`hooks/before-connect.json`, `hooks/before-connect.mjs`, `hooks/connect-check.mjs`, Claude Code only, on by default). When Claude is about to add an MCP server, it sends that server's address (scheme, host and path only) in one `road_conditions` call to `https://7it.co.il/7maps/mcp?via=claude-hook&set=agent&pv=<plugin version>`, and nothing else: never the command, the file, the project, prompts or the conversation. 7IT keeps the same usage record as for any tool call. Off: `/7maps:never` (or `SEVENMAPS_BEFORE_CONNECT=off`); on again: `/7maps:always`.
 - **Reports on a server call.** When your agent adds `last_trip` to a 7Maps call, or calls `report_road`, it sends fixed fields about one call it made to an MCP server on the map: the server, the tool name, whether it worked (a reason from a fixed list when not), the time taken, and a few optional fixed fields. No arguments, results or text in the agent's own words; anything else in a report refuses the whole report. The reporter is kept as a keyed code derived from the network address (or a paying customer's code), never the IP address. Reports feed the server's public rating.
 - **Payments.** Paid calls (x402) carry the payment your agent signs; 7IT keeps the paying wallet, the amount and the transaction id.
 - Nothing else: no telemetry, no analytics, no background requests.
@@ -231,6 +234,12 @@ it, on your machine, with the servers you have configured. It sends nothing abou
 - It never blocks a session; if the list cannot be downloaded, the session starts without it.
 - The list is kept for 10 minutes in a cache folder of your own (`$XDG_CACHE_HOME/7maps/down-v1.json` or `~/.cache/7maps/down-v1.json`, readable only by you). The hook ignores the file if it is a link or belongs to another user.
 - To turn the hook off, set `SEVENMAPS_HOOK=off` in your environment.
+
+**The before-connect lookup.**
+Before Claude adds a new MCP server, the plugin looks up that server's address on 7Maps and tells Claude what 7Maps knows.
+- It only adds information. The tool call goes ahead exactly as Claude and you decide; nothing is blocked.
+- Only the server address is sent (scheme, host and path). If 7Maps cannot answer within a few seconds, nothing is added.
+- `/7maps:never` turns it off for all projects on this machine (`~/.config/7maps/settings.json`, or under `$XDG_CONFIG_HOME`); `/7maps:always` turns it back on. `node <plugin folder>/hooks/setting.mjs status` shows the state.
 
 **A server is reported down but works for you.**
 7Maps reports what its own checks saw at the time shown in the answer. If the server works now, the next check

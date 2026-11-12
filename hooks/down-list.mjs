@@ -23,7 +23,7 @@ export function cacheDir(env = process.env, home = os.homedir()) {
 const ownUid = () => (typeof process.getuid === 'function' ? process.getuid() : null);
 // A cache file (or folder) is trusted only when it is a real file (or folder), not a link, and,
 // where the system has user ids, owned by this user.
-function trusted(p, kind) {
+export function trusted(p, kind) {
   try {
     const st = fs.lstatSync(p);
     if (st.isSymbolicLink() || (kind === 'dir' ? !st.isDirectory() : !st.isFile())) return false;

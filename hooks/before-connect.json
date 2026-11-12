@@ -1,0 +1,13 @@
+{
+  "description": "7Maps before-connect lookup (Claude Code only, on by default, off with /7maps:never): when Claude is about to add an MCP server (a '... mcp add <url>' command, or a write to an MCP config file such as .mcp.json), sends that server's address (scheme, host and path only) to 7Maps' road_conditions and adds 7Maps' record of it to Claude's context. Informs only: never blocks or changes the tool call. Kept separate from hooks/hooks.json, which Gemini CLI also loads.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|Write|Edit|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/before-connect.mjs\"", "timeout": 15 }
+        ]
+      }
+    ]
+  }
+}

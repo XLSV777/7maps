@@ -1,9 +1,15 @@
 ---
-description: Add a short, marked note to this project's CLAUDE.md so Claude uses 7Maps when it chooses, adds or connects to an MCP server, or when a configured one fails. Remove it with /7maps:never.
+description: Turn the 7Maps before-connect lookup back on (it is on by default), and add a short, marked note to this project's CLAUDE.md so Claude uses 7Maps when it chooses, adds or connects to an MCP server, or when a configured one fails. /7maps:never turns both off.
 disable-model-invocation: true
 ---
 
-The person asked to make 7Maps part of this project's instructions. Add the block below to the project's CLAUDE.md, and nothing else.
+The person asked to make 7Maps part of how this project works with MCP servers. Do two things, and nothing else.
+
+First, turn the before-connect lookup on. Run this one command and show the person the line it prints:
+`node "${CLAUDE_PLUGIN_ROOT}/hooks/setting.mjs" on`
+It writes one small setting file of their own (`~/.config/7maps/settings.json`, or under `$XDG_CONFIG_HOME`) and sends nothing. The lookup is on by default; this only matters after `/7maps:never`. If `SEVENMAPS_BEFORE_CONNECT=off` or `SEVENMAPS_HOOK=off` is set in the environment, the line says so; tell the person that variable keeps it off.
+
+Then add the block below to the project's CLAUDE.md:
 
 1. Pick the file, in the project root (the directory this session started in):
    - `CLAUDE.md` if it exists, otherwise `.claude/CLAUDE.md` if that exists.
@@ -26,4 +32,4 @@ Added with /7maps:always. Remove with /7maps:never, or delete this section.
 <!-- 7maps:end -->
 ```
 
-4. Confirm in two or three short lines: which file changed, what the block asks, and that `/7maps:never` (or deleting the section) removes it. Mention that the two `<!-- 7maps -->` comment lines only mark where the block starts and ends; Claude Code leaves HTML comments out of what it reads.
+4. Confirm in two or three short lines: the lookup is on, which file changed, what the block asks, and that `/7maps:never` (or deleting the section) removes it. Mention that the two `<!-- 7maps -->` comment lines only mark where the block starts and ends; Claude Code leaves HTML comments out of what it reads.
