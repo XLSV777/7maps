@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.6.1 (2026-11-16)
 
 - New `directory/` folder: the Claude plugin directory edition of 7Maps. Only the remote 7Maps MCP server (HTTPS) and the `/7maps:always` and `/7maps:never` commands, with no hooks or scripts, so it fits the directory rules for organizations that are not Verified. The full plugin in the repository root is unchanged.
 
