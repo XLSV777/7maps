@@ -6,7 +6,7 @@ Docs: https://7it.co.il/7maps/plugin/
 
 A live map of public MCP servers for AI agents (a map of software, not geography). Every remote server in the official MCP registry is checked daily with `initialize` and `tools/list` only. Each tool gets an automated risk estimate (read-only, needs approval or high risk) from its public description and annotations; estimates can be wrong. Agents ask one question instead of loading thousands of tool definitions:
 
-- `find_tool`: search over 200,000 tools for one that does a job, with its server's status (no charge).
+- `find_tool`: find a tool that does a job across the MCP servers 7Maps checks daily, with its server's status (no charge).
 - `route`: which open server and tool can do a task, with the least access, plus alternatives and servers to avoid.
 - `road_conditions`: a server's status, speed, tool risk levels, last change and agents' rating, before connecting.
 - `watch`, `verify_lock`, `changes_since`: did a server a person approved change, or get riskier.
