@@ -1,6 +1,6 @@
 # 7Maps
 
-Measured October 2026 on Opus 5.5: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/
+Measured October 2026: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/
 
 Docs: https://7it.co.il/7maps/plugin/
 
@@ -77,12 +77,6 @@ claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-co
 
 ```json
 { "mcpServers": { "7maps": { "type": "http", "url": "https://7it.co.il/7maps/mcp?via=github" } } }
-```
-
-**Gemini CLI**
-
-```
-gemini extensions install https://github.com/XLSV777/7maps
 ```
 
 **Claude Code plugin** (the server's agent set, an `mcp-preflight` skill, a session-start line when one of your configured servers is down, a lookup on 7Maps before Claude adds a new MCP server, and the `/7maps:always` and `/7maps:never` commands). It works with nothing to set up.
