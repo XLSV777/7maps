@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.XLSV777/7maps",
+  "title": "7Maps",
+  "description": "Signed history of which MCP servers actually work, run by 7IT Solutions.",
+  "version": "1.0.4",
+  "websiteUrl": "https://7it.co.il/7maps/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://7it.co.il/7maps/mcp?via=registry"
+    }
+  ]
+}

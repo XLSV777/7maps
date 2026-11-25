@@ -1,0 +1,23 @@
+name: Publish to the official MCP registry (on demand)
+# Publishes registry-publish/server.json with GitHub OIDC (no token, no device code): the registry accepts io.github.XLSV777/* from this repo.
+# Runs when registry-publish/publish.trigger changes, or by hand.
+on:
+  workflow_dispatch:
+  push:
+    paths: ['registry-publish/publish.trigger']
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: registry-publish
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mcp-publisher
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+      - run: ./mcp-publisher login github-oidc
+      - run: ./mcp-publisher publish
