@@ -1,6 +1,6 @@
 # 7Maps
 
-Measured October 2026: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/
+Measured October 2026 in our own test: about 63% fewer tokens per verified answer about MCP servers; details: https://7it.co.il/7maps/plugin/
 
 Docs: https://7it.co.il/7maps/plugin/
 
@@ -88,7 +88,7 @@ claude mcp add --transport http 7maps "https://7it.co.il/7maps/mcp?via=claude-co
 /plugin install 7maps@7maps
 ```
 
-2. Recommended, once per project: `/7maps:always`. For best results: fewer tokens, and the agent goes to 7Maps directly. `/7maps:never` removes it and turns the before-connect lookup off.
+2. Recommended, once per project: `/7maps:always`. For best results, the agent goes to 7Maps directly, and each answer states an estimate of the tokens it saved. `/7maps:never` removes it and turns the before-connect lookup off.
 
 3. Turn on updates: in `/plugin`, open Marketplaces, choose `7maps`, Enable auto-update. Plugins added from GitHub do not update by themselves until you do. To update by hand: `/plugin marketplace update 7maps` (or `claude plugin update 7maps@7maps` from a terminal). When a newer version is out, the session hook adds one line saying so (from the same down list it already downloads, so no extra request), at most once per session.
 
